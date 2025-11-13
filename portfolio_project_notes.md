@@ -1,1 +1,0 @@
-Guía técnica resumida.
