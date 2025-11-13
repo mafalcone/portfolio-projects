@@ -1,0 +1,6 @@
+.venv/
+node_modules/
+dist/
+todos.db
+__pycache__/
+.env
