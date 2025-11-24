@@ -4,3 +4,4 @@ dist/
 todos.db
 __pycache__/
 .env
+patch.txt
