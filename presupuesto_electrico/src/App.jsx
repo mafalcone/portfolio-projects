@@ -62,7 +62,7 @@ export default function App() {
     const doc = new jsPDF()
 
     doc.setFontSize(16)
-    doc.text('Presupuesto Eléctrico - AiraCero', 10, 15)
+    doc.text('Presupuesto', 10, 15)
 
     doc.setFontSize(11)
     let y = 25
@@ -92,15 +92,14 @@ export default function App() {
     doc.setFontSize(13)
     doc.text(`TOTAL: $${totals.total.toFixed(2)}`, 10, y)
 
-    doc.save('presupuesto_electrico.pdf')
+    doc.save('presupuesto.pdf')
   }
 
   return (
     <div className="app">
       <header className="app-header">
         <div>
-          <h1>Presupuesto Eléctrico</h1>
-          <p className="subtitle">Herramienta interna - AiraCero</p>
+          <h1>Presupuesto</h1>
         </div>
         <button className="btn primary" onClick={handleExportPDF}>
           Exportar PDF
