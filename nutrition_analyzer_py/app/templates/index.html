@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nutrition Analyzer - Python</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Nutrition Analyzer</h1>
+    <p>Proyecto de portfolio - Python + FastAPI</p>
+  </header>
+
+  <main>
+    <section class="search-section">
+      <form method="get" action="/">
+        <label for="q">Buscar alimento (ej: banana, arroz, huevo):</label>
+        <div class="search-row">
+          <input
+            type="text"
+            id="q"
+            name="q"
+            value="{{ query }}"
+            placeholder="Escribí un alimento..."
+            autofocus
+          />
+          <button type="submit">Analizar</button>
+        </div>
+      </form>
+      <p class="hint">Base interna: {{ total_foods }} alimentos de ejemplo.</p>
+    </section>
+
+    {% if results %}
+      <section class="results">
+        <h2>Resultados</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Alimento</th>
+              <th>Calorías</th>
+              <th>Proteínas (g)</th>
+              <th>Carbohidratos (g)</th>
+              <th>Grasas (g)</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for food in results %}
+            <tr>
+              <td>{{ food.name }}</td>
+              <td>{{ food.calories }}</td>
+              <td>{{ food.protein }}</td>
+              <td>{{ food.carbs }}</td>
+              <td>{{ food.fat }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    {% elif query %}
+      <p class="no-results">No encontré resultados para "{{ query }}".</p>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>AiraCero · Demo técnico de backend Python + FastAPI + templates.</p>
+  </footer>
+</body>
+</html>
