@@ -1,36 +1,49 @@
-from fastapi import FastAPI, Request
+from pathlib import Path
+from fastapi import FastAPI, Request, Query
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .foods_db import search_foods, FOODS
+from .foods_db import FOODS_DB
 
-app = FastAPI(title="Nutrition Analyzer (Python)")
+BASE_DIR = Path(__file__).resolve().parent
 
-# Archivos estáticos y templates
-app.mount("/static", StaticFiles(directory="nutrition_analyzer_py/app/static"), name="static")
-templates = Jinja2Templates(directory="nutrition_analyzer_py/app/templates")
+app = FastAPI(
+    title="Nutrition Analyzer",
+    description="API + mini UI para analizar info nutricional (Python + FastAPI)",
+)
+
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request, q: str = ""):
-    results = search_foods(q)
+async def home(request: Request, q: str | None = Query(None)):
+    results = []
+    if q:
+        q_lower = q.lower()
+        results = [
+            food
+            for food in FOODS_DB
+            if q_lower in food["name"].lower()
+            or q_lower in food.get("category", "").lower()
+        ]
     return templates.TemplateResponse(
         "index.html",
         {
             "request": request,
-            "query": q,
+            "query": q or "",
             "results": results,
-            "total_foods": len(FOODS),
         },
     )
 
 
 @app.get("/api/foods")
-async def api_foods(q: str = ""):
-    """Endpoint JSON para usar desde otros clientes."""
-    return {
-        "query": q,
-        "results": search_foods(q),
-        "count": len(search_foods(q)),
-    }
+async def search_foods(q: str = Query(..., description="Nombre del alimento a buscar")):
+    q_lower = q.lower()
+    return [
+        food
+        for food in FOODS_DB
+        if q_lower in food["name"].lower()
+        or q_lower in food.get("category", "").lower()
+    ]
