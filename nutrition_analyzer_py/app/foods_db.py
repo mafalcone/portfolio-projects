@@ -1,5 +1,5 @@
 # Base de datos simple de alimentos para el Nutrition Analyzer
-# Cada alimento es un diccionario con info básica nutricional por 100 g
+# Cada alimento es un diccionario con info nutricional por 100 g
 
 FOODS_DB = [
     {
