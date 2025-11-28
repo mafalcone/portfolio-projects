@@ -1,95 +1,99 @@
-# Base de datos simple de alimentos para el Nutrition Analyzer
-# Cada alimento es un diccionario con info nutricional por 100 g
+"""
+Módulo de datos para Nutrition Analyzer.
+
+Define FOODS_DB: lista de alimentos con información nutricional
+por 100 g. Usado por app.main para servir la API y la UI.
+"""
 
 FOODS_DB = [
     {
         "id": 1,
-        "name": "banana",
-        "category": "fruta",
+        "name": "Banana",
+        "category": "Fruta",
         "calories": 89,
-        "protein": 1.1,
-        "carbs": 23,
-        "fat": 0.3
+        "protein_g": 1.1,
+        "carbs_g": 23,
+        "fat_g": 0.3,
     },
     {
         "id": 2,
-        "name": "manzana",
-        "category": "fruta",
+        "name": "Manzana",
+        "category": "Fruta",
         "calories": 52,
-        "protein": 0.3,
-        "carbs": 14,
-        "fat": 0.2
+        "protein_g": 0.3,
+        "carbs_g": 14,
+        "fat_g": 0.2,
     },
     {
         "id": 3,
-        "name": "pechuga de pollo",
-        "category": "carne",
+        "name": "Pechuga de pollo",
+        "category": "Carne",
         "calories": 165,
-        "protein": 31,
-        "carbs": 0,
-        "fat": 3.6
+        "protein_g": 31,
+        "carbs_g": 0,
+        "fat_g": 3.6,
     },
     {
         "id": 4,
-        "name": "arroz blanco cocido",
-        "category": "cereal",
+        "name": "Arroz blanco cocido",
+        "category": "Cereal",
         "calories": 130,
-        "protein": 2.4,
-        "carbs": 28,
-        "fat": 0.3
+        "protein_g": 2.4,
+        "carbs_g": 28,
+        "fat_g": 0.3,
     },
     {
         "id": 5,
-        "name": "huevo",
-        "category": "proteína",
-        "calories": 155,
-        "protein": 13,
-        "carbs": 1.1,
-        "fat": 11
+        "name": "Avena seca",
+        "category": "Cereal",
+        "calories": 389,
+        "protein_g": 17,
+        "carbs_g": 66,
+        "fat_g": 7,
     },
     {
         "id": 6,
-        "name": "avena",
-        "category": "cereal",
-        "calories": 389,
-        "protein": 16.9,
-        "carbs": 66.3,
-        "fat": 6.9
+        "name": "Huevo",
+        "category": "Proteína",
+        "calories": 155,
+        "protein_g": 13,
+        "carbs_g": 1.1,
+        "fat_g": 11,
     },
     {
         "id": 7,
-        "name": "leche descremada",
-        "category": "lácteo",
-        "calories": 34,
-        "protein": 3.4,
-        "carbs": 5,
-        "fat": 0.1
+        "name": "Leche entera",
+        "category": "Lácteo",
+        "calories": 61,
+        "protein_g": 3.2,
+        "carbs_g": 4.8,
+        "fat_g": 3.3,
     },
     {
         "id": 8,
-        "name": "queso crema",
-        "category": "lácteo",
-        "calories": 342,
-        "protein": 6.2,
-        "carbs": 5.2,
-        "fat": 34
+        "name": "Yogur natural",
+        "category": "Lácteo",
+        "calories": 59,
+        "protein_g": 10,
+        "carbs_g": 3.6,
+        "fat_g": 0.4,
     },
     {
         "id": 9,
-        "name": "aceite de oliva",
-        "category": "grasa",
-        "calories": 884,
-        "protein": 0,
-        "carbs": 0,
-        "fat": 100
+        "name": "Pan integral",
+        "category": "Panificado",
+        "calories": 247,
+        "protein_g": 13,
+        "carbs_g": 41,
+        "fat_g": 4.2,
     },
     {
         "id": 10,
-        "name": "chipá",
-        "category": "panificado",
-        "calories": 350,
-        "protein": 9,
-        "carbs": 35,
-        "fat": 18
-    }
+        "name": "Aceite de oliva",
+        "category": "Grasa",
+        "calories": 884,
+        "protein_g": 0,
+        "carbs_g": 0,
+        "fat_g": 100,
+    },
 ]
