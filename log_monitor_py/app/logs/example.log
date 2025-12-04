@@ -1,0 +1,7 @@
+[2025-11-27 10:00:00] INFO Sistema iniciado
+[2025-11-27 10:00:05] INFO Usuario manu se conectó
+[2025-11-27 10:01:10] WARNING Respuesta lenta del servicio externo
+[2025-11-27 10:01:45] ERROR No se pudo procesar la solicitud 123
+[2025-11-27 10:02:00] INFO Reintento de la solicitud 123
+[2025-11-27 10:02:10] INFO Solicitud 123 procesada correctamente
+[2025-11-27 10:03:00] DEBUG Métrica interna: latency=120ms

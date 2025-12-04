@@ -1,0 +1,3 @@
+2025-12-02 22:24:19,699 [INFO] Comando tail ejecutado sobre example.log
+2025-12-02 22:24:56,310 [INFO] Comando metrics ejecutado
+2025-12-02 22:25:34,226 [INFO] Levantando interfaz web en puerto 8082

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Monitor – Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .dashboard-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px 40px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .dashboard-header .subtitle {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .card {
+            background: #020617;
+            border-radius: 12px;
+            border: 1px solid #1f2937;
+            padding: 16px 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .metric-sub {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-green {
+            background: rgba(34,197,94,0.1);
+            color: #4ade80;
+        }
+
+        .badge-red {
+            background: rgba(248,113,113,0.1);
+            color: #f97373;
+        }
+
+        .process-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .process-table th,
+        .process-table td {
+            padding: 4px 6px;
+            text-align: left;
+        }
+
+        .process-table th {
+            border-bottom: 1px solid #1f2937;
+            color: #9ca3af;
+        }
+
+        .process-table tr:nth-child(even) {
+            background: rgba(15,23,42,0.8);
+        }
+
+        .process-suspicious {
+            color: #f97373;
+            font-weight: 600;
+        }
+
+        .log-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .log-input-row input {
+            flex: 1;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+            background: #020617;
+            color: #e5e7eb;
+            font-size: 0.85rem;
+        }
+
+        .log-input-row button {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #f97316;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0b1120;
+        }
+
+        .log-input-row button:hover {
+            filter: brightness(1.1);
+        }
+
+        #log-output {
+            margin-top: 6px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.78rem;
+            max-height: 260px;
+            overflow: auto;
+            white-space: pre;
+            background: #020617;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+            padding: 8px;
+        }
+
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="dashboard-layout">
+    <div class="dashboard-header">
+        <div>
+            <h1>Log Monitor – Dashboard</h1>
+            <p class="subtitle">
+                Monitoreo de sistema (CPU/RAM/procesos) + tail de logs en tiempo real.
+            </p>
+        </div>
+        <div class="badge badge-green">
+            ONLINE
+        </div>
+    </div>
+
+    <!-- Fila CPU + RAM -->
+    <div class="grid-2">
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2>CPU</h2>
+                    <div id="cpu-percent" class="metric-value">– %</div>
+                    <div class="metric-sub" id="cpu-cores">Núcleos: –</div>
+                </div>
+                <div style="width:140px; height:90px;">
+                    <canvas id="cpuChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2>Memoria RAM</h2>
+                    <div id="ram-percent" class="metric-value">– %</div>
+                    <div class="metric-sub" id="ram-summary">–</div>
+                </div>
+                <div style="width:140px; height:90px;">
+                    <canvas id="ramChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fila procesos + log tail -->
+    <div class="grid-3">
+        <div class="card">
+            <h2>Procesos activos</h2>
+            <table class="process-table">
+                <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Proceso</th>
+                    <th>CPU%</th>
+                    <th>RAM%</th>
+                </tr>
+                </thead>
+                <tbody id="process-table-body">
+                <tr><td colspan="4">Cargando…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" style="grid-column: span 2;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Tail de log</h2>
+                <span class="metric-sub">Actualiza cada 3 segundos</span>
+            </div>
+
+            <div class="log-input-row">
+                <input type="text" id="log-filename" placeholder="Nombre del archivo (ej: example.log)">
+                <button id="btn-start-tail">Empezar</button>
+            </div>
+            <div class="metric-sub">Carpeta usada: <code>app/logs/</code></div>
+            <pre id="log-output">Seleccioná un archivo y presioná "Empezar".</pre>
+        </div>
+    </div>
+
+    <div class="footer">
+        Proyecto de portfolio – backend Python + FastAPI + psutil + dashboard web.
+    </div>
+</div>
+
+<script>
+    const cpuHistory = [];
+    const ramHistory = [];
+    const historyLimit = 30;
+
+    function pushHistory(arr, value) {
+        arr.push(value);
+        if (arr.length > historyLimit) arr.shift();
+    }
+
+    const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+    const cpuChart = new Chart(cpuCtx, {
+        type: 'line',
+        data: {
+            labels: Array(historyLimit).fill(''),
+            datasets: [{
+                data: [],
+                tension: 0.35,
+                borderWidth: 2,
+                pointRadius: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: { stepSize: 25 }
+                },
+                x: { display: false }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    const ramCtx = document.getElementById('ramChart').getContext('2d');
+    const ramChart = new Chart(ramCtx, {
+        type: 'line',
+        data: {
+            labels: Array(historyLimit).fill(''),
+            datasets: [{
+                data: [],
+                tension: 0.35,
+                borderWidth: 2,
+                pointRadius: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: { stepSize: 25 }
+                },
+                x: { display: false }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    async function updateCpu() {
+        try {
+            const res = await fetch('/api/metrics/cpu');
+            const data = await res.json();
+            const percent = data.percent ?? 0;
+            const cores = data.cores ?? '–';
+
+            document.getElementById('cpu-percent').textContent = percent.toFixed(1) + '%';
+            document.getElementById('cpu-cores').textContent = 'Núcleos: ' + cores;
+
+            pushHistory(cpuHistory, percent);
+            cpuChart.data.datasets[0].data = cpuHistory;
+            cpuChart.update('none');
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function formatBytes(bytes) {
+        if (!bytes || bytes <= 0) return '0 MB';
+        const mb = bytes / (1024 * 1024);
+        if (mb < 1024) return mb.toFixed(0) + ' MB';
+        const gb = mb / 1024;
+        return gb.toFixed(1) + ' GB';
+    }
+
+    async function updateRam() {
+        try {
+            const res = await fetch('/api/metrics/memory');
+            const data = await res.json();
+            const percent = data.percent ?? 0;
+
+            document.getElementById('ram-percent').textContent = percent.toFixed(1) + '%';
+            document.getElementById('ram-summary').textContent =
+                `${formatBytes(data.used)} / ${formatBytes(data.total)}`;
+
+            pushHistory(ramHistory, percent);
+            ramChart.data.datasets[0].data = ramHistory;
+            ramChart.update('none');
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async function updateProcesses() {
+        try {
+            const res = await fetch('/api/metrics/processes?limit=8');
+            const data = await res.json();
+            const tbody = document.getElementById('process-table-body');
+            tbody.innerHTML = '';
+
+            (data.processes || []).forEach(proc => {
+                const tr = document.createElement('tr');
+                if (proc.suspicious) tr.classList.add('process-suspicious');
+
+                tr.innerHTML = `
+                    <td>${proc.pid}</td>
+                    <td>${proc.name || '–'}</td>
+                    <td>${proc.cpu_percent.toFixed(1)}</td>
+                    <td>${proc.memory_percent.toFixed(1)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (!data.processes || data.processes.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="4">Sin datos de procesos.</td>';
+                tbody.appendChild(tr);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    let tailInterval = null;
+
+    async function updateLogTail() {
+        const filename = document.getElementById('log-filename').value.trim();
+        const output = document.getElementById('log-output');
+        if (!filename) {
+            output.textContent = 'Ingresá un nombre de archivo (ej: example.log)';
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/log_tail?filename=${encodeURIComponent(filename)}&lines=80`);
+            const data = await res.json();
+
+            if (data.error) {
+                output.textContent = data.error;
+            } else {
+                output.textContent = (data.lines || []).join('\n') || '(Log vacío)';
+            }
+        } catch (e) {
+            output.textContent = 'Error al leer el log.';
+            console.error(e);
+        }
+    }
+
+    document.getElementById('btn-start-tail').addEventListener('click', () => {
+        if (tailInterval) clearInterval(tailInterval);
+        updateLogTail();
+        tailInterval = setInterval(updateLogTail, 3000);
+    });
+
+    setInterval(updateCpu, 1500);
+    setInterval(updateRam, 2000);
+    setInterval(updateProcesses, 5000);
+    updateCpu();
+    updateRam();
+    updateProcesses();
+</script>
+</body>
+</html>
