@@ -1,3 +1,10 @@
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'TaskPulse API online',
+    env: process.env.NODE_ENV || 'development'
+  });
+});
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
