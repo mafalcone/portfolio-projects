@@ -1,26 +1,56 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
+import authRoutes from './routes/auth.js';
+import taskRoutes from './routes/tasks.js';
+
+dotenv.config();
+
+// Crear app de Express
+const app = express();
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
+
+// Ruta raíz (health check / info básica)
 app.get('/', (req, res) => {
   res.json({
     status: 'ok',
     message: 'TaskPulse API online',
-    env: process.env.NODE_ENV || 'development'
+    env: process.env.NODE_ENV || 'development',
   });
 });
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
-import mongoose from 'mongoose';
-import authRoutes from './routes/auth.js';
-import taskRoutes from './routes/tasks.js';
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+// Puerto: Railway pone PORT, si no usamos 5000
+const PORT = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGODB_URI).then(()=>console.log("Mongo connected"));
+// URI de Mongo: probamos primero MONGO_URI y luego MONGODB_URI
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
+if (!MONGO_URI) {
+  console.error('❌ ERROR: MONGO_URI / MONGODB_URI no está definido en las variables de entorno.');
+  process.exit(1);
+}
+
+// Conexión a MongoDB y arranque del servidor
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log('✅ Conectado a MongoDB');
+    app.listen(PORT, () => {
+      console.log(`🚀 TaskPulse backend escuchando en el puerto ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Error conectando a MongoDB:', err);
+    process.exit(1);
+  });
+
+// Rutas de la API
 app.use('/auth', authRoutes);
 app.use('/tasks', taskRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, ()=>console.log("Backend running on "+PORT));
+export default app;
