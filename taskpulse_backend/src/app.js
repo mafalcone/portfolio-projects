@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors()); // para el portfolio está bien así
 app.use(express.json());
 
 // Ruta raíz (health check / info básica)
@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
   res.json({
     status: 'ok',
     message: 'TaskPulse API online',
-    env: process.env.NODE_ENV || 'development',
   });
 });
 
@@ -49,8 +48,8 @@ mongoose
     process.exit(1);
   });
 
-// Rutas de la API
-app.use('/auth', authRoutes);
-app.use('/tasks', taskRoutes);
+// Rutas de la API (IMPORTANTE: prefijo /api)
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 export default app;
