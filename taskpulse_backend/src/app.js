@@ -1,83 +1,70 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
-import authRoutes from './routes/auth.js';
-import taskRoutes from './routes/tasks.js';
+import authRoutes from "./routes/auth.js";
+import taskRoutes from "./routes/tasks.js";
 
 dotenv.config();
 
-// Crear app de Express
 const app = express();
 
+/* ---------- CORS CONFIG ---------- */
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = (process.env.CORS_ORIGIN || "")
+    origin: (origin, cb) => {
+      const allowed = (process.env.CORS_ORIGIN || "")
         .split(",")
-        .map(o => o.trim())
+        .map(s => s.trim())
         .filter(Boolean);
 
-      // Permitir requests sin origin (Postman, curl, server-to-server)
-      if (!origin) {
-        return callback(null, true);
-      }
+      if (!origin) return cb(null, true); // curl / postman
+      if (allowed.length === 0) return cb(null, true);
+      if (allowed.includes(origin)) return cb(null, true);
 
-      // Si no se definió CORS_ORIGIN, permitir todo (fallback seguro)
-      if (allowedOrigins.length === 0) {
-        return callback(null, true);
-      }
-
-      // Validar contra la whitelist
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error(`CORS blocked: ${origin}`));
+      return cb(new Error(`CORS blocked: ${origin}`));
     },
     credentials: true,
   })
 );
 
-// Middlewares
+/* ---------- MIDDLEWARES ---------- */
 app.use(express.json());
 
-// Ruta raíz (health check / info básica)
-app.get('/', (req, res) => {
+/* ---------- HEALTH CHECK ---------- */
+app.get("/", (req, res) => {
   res.json({
-    status: 'ok',
-    message: 'TaskPulse API online',
+    status: "ok",
+    message: "TaskPulse API online",
+    env: process.env.NODE_ENV || "development",
   });
 });
 
-// Puerto: Railway pone PORT, si no usamos 5000
-const PORT = process.env.PORT || 5000;
+/* ---------- ROUTES ---------- */
+app.use("/auth", authRoutes);
+app.use("/tasks", taskRoutes);
 
-// URI de Mongo: probamos primero MONGO_URI y luego MONGODB_URI
+/* ---------- SERVER ---------- */
+const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 if (!MONGO_URI) {
-  console.error('❌ ERROR: MONGO_URI / MONGODB_URI no está definido en las variables de entorno.');
+  console.error("❌ MONGO_URI not defined");
   process.exit(1);
 }
 
-// Conexión a MongoDB y arranque del servidor
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    console.log('✅ Conectado a MongoDB');
-    app.listen(PORT, () => {
-      console.log(`🚀 TaskPulse backend escuchando en el puerto ${PORT}`);
-    });
+    console.log("✅ MongoDB connected");
+    app.listen(PORT, () =>
+      console.log(`🚀 TaskPulse backend running on ${PORT}`)
+    );
   })
-  .catch((err) => {
-    console.error('❌ Error conectando a MongoDB:', err);
+  .catch(err => {
+    console.error("❌ Mongo error:", err);
     process.exit(1);
   });
-
-// Rutas de la API (IMPORTANTE: prefijo /api)
-app.use('/api/auth', authRoutes);
-app.use('/api/tasks', taskRoutes);
 
 export default app;
