@@ -11,8 +11,36 @@ dotenv.config();
 // Crear app de Express
 const app = express();
 
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const allowedOrigins = (process.env.CORS_ORIGIN || "")
+        .split(",")
+        .map(o => o.trim())
+        .filter(Boolean);
+
+      // Permitir requests sin origin (Postman, curl, server-to-server)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      // Si no se definió CORS_ORIGIN, permitir todo (fallback seguro)
+      if (allowedOrigins.length === 0) {
+        return callback(null, true);
+      }
+
+      // Validar contra la whitelist
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+  })
+);
+
 // Middlewares
-app.use(cors()); // para el portfolio está bien así
 app.use(express.json());
 
 // Ruta raíz (health check / info básica)
