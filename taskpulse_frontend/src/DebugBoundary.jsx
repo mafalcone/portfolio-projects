@@ -5,12 +5,15 @@ export default class DebugBoundary extends React.Component {
     super(props);
     this.state = { err: null };
   }
+
   static getDerivedStateFromError(err) {
     return { err };
   }
+
   componentDidCatch(err, info) {
     console.error("Runtime error:", err, info);
   }
+
   render() {
     if (this.state.err) {
       return (
