@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import DashboardView from "./pages/Dashboard";
