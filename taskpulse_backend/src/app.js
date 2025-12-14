@@ -11,23 +11,33 @@ dotenv.config();
 const app = express();
 
 /* ---------- CORS CONFIG ---------- */
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      const allowed = (process.env.CORS_ORIGIN || "")
-        .split(",")
-        .map(s => s.trim())
-        .filter(Boolean);
+app.use(cors({
+  origin: (origin, cb) => {
+    const raw = process.env.CORS_ORIGIN || "";
+    const allow = raw.split(",").map(s => s.trim()).filter(Boolean);
 
-      if (!origin) return cb(null, true); // curl / postman
-      if (allowed.length === 0) return cb(null, true);
-      if (allowed.includes(origin)) return cb(null, true);
+    if (!origin) return cb(null, true);          // curl/postman
+    if (allow.length === 0) return cb(null, true);
 
-      return cb(new Error(`CORS blocked: ${origin}`));
-    },
-    credentials: true,
-  })
-);
+    const ok = allow.some((rule) => {
+      if (rule === origin) return true;
+
+      // wildcard: https://*.vercel.app
+      if (rule.includes("*")) {
+        const escaped = rule
+          .replace(/[-/\^$+?.()|[\]{}]/g, "\$&")
+          .replace(/\*/g, ".*");
+        const re = new RegExp("^" + escaped + "$");
+        return re.test(origin);
+      }
+      return false;
+    });
+
+    if (ok) return cb(null, true);
+    return cb(new Error(`CORS blocked: ${origin}`));
+  },
+  credentials: true,
+}));
 
 /* ---------- MIDDLEWARES ---------- */
 app.use(express.json());
