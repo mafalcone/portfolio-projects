@@ -1,10 +1,23 @@
 import React from "react";
-import { useAuth } from "./contexts/AuthContext";
-import Login from "./pages/Login";
-import DashboardView from "./pages/Dashboard";
-import "./styles/globals.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <DashboardView /> : <Login />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }

@@ -57,15 +57,15 @@ app.use("/tasks", taskRoutes);
 
 /* ---------- SERVER ---------- */
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGO_URI) {
-  console.error("❌ MONGO_URI not defined");
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI not defined");
   process.exit(1);
 }
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log("✅ MongoDB connected");
     app.listen(PORT, () =>
