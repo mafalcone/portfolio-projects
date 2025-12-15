@@ -1,47 +1,52 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { api } from "../services/api";
+import { api } from "../services/api.js";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, loading, authError } = useAuth();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [localError, setLocalError] = useState(null);
 
   async function handleLogin(e) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+    setLocalError(null);
     try {
       await login(email, password);
+      navigate("/dashboard");
     } catch (err) {
-      setError(err?.response?.data?.error || "Login failed");
-    } finally {
-      setLoading(false);
+      setLocalError(err?.message || "Login failed");
     }
   }
 
   async function handleRegister(e) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+    setLocalError(null);
     try {
       await api.post("/auth/register", { email, password });
-      // después de registrar, te loguea
       await login(email, password);
+      navigate("/dashboard");
     } catch (err) {
-      setError(err?.response?.data?.error || "Register failed");
-    } finally {
-      setLoading(false);
+      setLocalError(
+        err?.response?.data?.error ||
+        err?.message ||
+        "Register failed"
+      );
     }
   }
+
+  const error = authError || localError;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white px-6">
       <div className="w-full max-w-sm rounded-2xl bg-slate-900/40 border border-slate-800 shadow-xl p-6">
         <h1 className="text-xl font-semibold">TaskPulse</h1>
-        <p className="text-sm text-slate-400 mt-1">Sign in to manage your tasks.</p>
+        <p className="text-sm text-slate-400 mt-1">
+          Sign in to manage your tasks.
+        </p>
 
         <form className="mt-5 space-y-3">
           <div>
