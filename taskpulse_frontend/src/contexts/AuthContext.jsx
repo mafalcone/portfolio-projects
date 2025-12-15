@@ -1,13 +1,11 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { api } from "../services/api.js";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("accessToken")
-  );
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
@@ -16,16 +14,19 @@ export function AuthProvider({ children }) {
     setAuthError(null);
     try {
       const res = await api.post("/auth/login", { email, password });
-      const { accessToken, user } = res.data;
+      const data = res?.data || {};
 
-      if (!accessToken) throw new Error("No accessToken returned");
+      if (!data.accessToken) throw new Error("No accessToken returned");
 
-      localStorage.setItem("accessToken", accessToken);
-      setAccessToken(accessToken);
-      setUser(user || null);
+      localStorage.setItem("accessToken", data.accessToken);
+      setAccessToken(data.accessToken);
+      setUser(data.user || { email });
+
+      return data;
     } catch (err) {
       setAuthError(
         err?.response?.data?.error ||
+        err?.response?.data?.message ||
         err?.message ||
         "Login failed"
       );
@@ -39,6 +40,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
     setUser(null);
+    setAuthError(null);
   }
 
   const value = useMemo(
