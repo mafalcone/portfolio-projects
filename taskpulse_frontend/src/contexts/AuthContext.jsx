@@ -1,48 +1,34 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { api } from "../services/api.js";
 
 const AuthContext = createContext(null);
 
-function safeJsonParse(v) {
-  try { return JSON.parse(v); } catch { return null; }
-}
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => safeJsonParse(localStorage.getItem("user")) || null);
-  const [accessToken, setAccessToken] = useState(() => localStorage.getItem("accessToken") || null);
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
-
-  useEffect(() => {
-    if (accessToken) localStorage.setItem("accessToken", accessToken);
-    else localStorage.removeItem("accessToken");
-  }, [accessToken]);
-
-  useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
-  }, [user]);
 
   async function login(email, password) {
     setLoading(true);
     setAuthError(null);
     try {
       const res = await api.post("/auth/login", { email, password });
-      const data = res?.data || {};
+      const { accessToken, user } = res.data;
 
-      if (!data.accessToken) throw new Error("Login response missing accessToken");
+      if (!accessToken) throw new Error("No accessToken returned");
 
-      setUser(data.user || { email });
-      setAccessToken(data.accessToken);
-
-      return data;
+      localStorage.setItem("accessToken", accessToken);
+      setAccessToken(accessToken);
+      setUser(user || null);
     } catch (err) {
-      const msg =
+      setAuthError(
         err?.response?.data?.error ||
-        err?.response?.data?.message ||
         err?.message ||
-        "Login failed";
-      setAuthError(msg);
+        "Login failed"
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -50,9 +36,9 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    setUser(null);
+    localStorage.removeItem("accessToken");
     setAccessToken(null);
-    setAuthError(null);
+    setUser(null);
   }
 
   const value = useMemo(
@@ -73,6 +59,6 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
