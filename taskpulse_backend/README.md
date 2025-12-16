@@ -1,19 +1,21 @@
-# TaskPulse Backend (Node + Express + MongoDB)
+# TaskPulse Backend
 
-Backend API for TaskPulse.
+REST API for the TaskPulse application.
 
 ## Features
-- Auth (JWT)
-- Tasks CRUD
-- MongoDB Atlas
-- CORS configured for Vercel
+- User registration and login
+- JWT authentication
+- Task CRUD operations
+- MongoDB persistence
 
-## Env Vars (Railway)
-- `NODE_ENV`=production
-- `MONGO_URI`=mongodb+srv://...
-- `JWT_ACCESS_SECRET`=...
-- `JWT_REFRESH_SECRET`=...
-- `CORS_ORIGIN`=https://your-vercel-domain.vercel.app,https://*.vercel.app
+## Tech Stack
+- Node.js
+- Express
+- MongoDB
+- JWT
 
-## Health check
-GET /
+## Environment Variables
+- MONGO_URI
+- JWT_ACCESS_SECRET
+- JWT_REFRESH_SECRET
+- CORS_ORIGIN

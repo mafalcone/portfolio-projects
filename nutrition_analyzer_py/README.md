@@ -1,15 +1,14 @@
-# Nutrition Analyzer (Python + FastAPI)
+# Nutrition Analyzer
 
-Proyecto de portfolio para demostrar:
+Tool that analyzes nutritional information for food items.
 
-- Python 3
-- FastAPI (backend)
-- Templates con Jinja2
-- Manejo de datos nutricionales en memoria
+## Features
+- Nutritional data lookup
+- Calorie and macro analysis
 
-## Endpoints
+## Tech Stack
+- Python
 
-- `GET /` -> interfaz web para buscar alimentos
-- `GET /api/foods?q=banana` -> devuelve JSON con la info nutricional
-
-Pensado como ejemplo de API + pequeña UI server-side en Python.
+## Use Cases
+- Health & fitness applications
+- Data processing pipelines

@@ -1,19 +1,17 @@
-# TaskPulse Frontend (Vite + React + Tailwind)
+# TaskPulse Frontend
 
-Frontend for TaskPulse (portfolio project).
+Frontend application for TaskPulse.
 
 ## Features
-- Login + Register flow
-- JWT auth (token stored locally)
-- Task CRUD UI (add/delete + logout)
-- Clean responsive UI
+- Login & registration
+- Task dashboard
+- Task creation and deletion
+- Logout
 
-## Env Vars (Vercel)
-- `VITE_API_BASE_URL` = backend URL
+## Tech Stack
+- React
+- Vite
+- Tailwind CSS
 
-Example:
-VITE_API_BASE_URL=https://portfolio-projects-production.up.railway.app
-
-## Local
-npm install
-npm run dev
+## Environment Variables
+- VITE_API_BASE_URL
