@@ -41,7 +41,7 @@ This project performs a **passive web hardening audit** of a public website and 
 
 ## Install
 
-```bash
+
 pip install -r requirements.txt
 
 
