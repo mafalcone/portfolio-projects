@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+
+import requests
+import ssl
+import socket
+import argparse
+import json
+from urllib.parse import urlparse
+from datetime import datetime
+
+SECURITY_HEADERS = [
+    "Content-Security-Policy",
+    "Strict-Transport-Security",
+    "X-Frame-Options",
+    "X-Content-Type-Options",
+    "Referrer-Policy",
+    "Permissions-Policy",
+]
+
+def get_https_info(host):
+    ctx = ssl.create_default_context()
+    with socket.create_connection((host, 443), timeout=5) as sock:
+        with ctx.wrap_socket(sock, server_hostname=host) as ssock:
+            cert = ssock.getpeercert()
+            tls_version = ssock.version()
+            return {
+                "issuer": dict(x[0] for x in cert.get("issuer", [])),
+                "expires": cert.get("notAfter"),
+                "tls_version": tls_version,
+            }
+
+def check_http_redirect(host):
+    try:
+        r = requests.get(f"http://{host}", allow_redirects=False, timeout=5)
+        loc = r.headers.get("Location", "")
+        return loc.startswith("https://")
+    except Exception:
+        return False
+
+def audit(url):
+    result = {
+        "url": url,
+        "timestamp": datetime.utcnow().isoformat(),
+        "headers": {},
+        "cookies": [],
+        "https": {},
+        "checks": {},
+        "leaks": [],
+        "score": 100,
+        "recommendations": []
+    }
+
+    r = requests.get(url, timeout=10)
+    headers = r.headers
+
+    # Security headers
+    for h in SECURITY_HEADERS:
+        if h in headers:
+            result["headers"][h] = "present"
+        else:
+            result["headers"][h] = "missing"
+            result["score"] -= 8
+            result["recommendations"].append(f"Missing security header: {h}")
+
+    # Cookies
+    for c in r.cookies:
+        flags = {
+            "secure": c.secure,
+            "httponly": "HttpOnly" in c._rest,
+            "samesite": c._rest.get("SameSite")
+        }
+        result["cookies"].append({c.name: flags})
+        if not flags["secure"]:
+            result["score"] -= 5
+            result["recommendations"].append(f"Cookie {c.name} is not Secure")
+
+    # Info leakage
+    for leak in ["Server", "X-Powered-By"]:
+        if leak in headers:
+            result["leaks"].append({leak: headers[leak]})
+            result["score"] -= 5
+            result["recommendations"].append(f"Information leak header exposed: {leak}")
+
+    parsed = urlparse(url)
+
+    # HTTPS + TLS
+    if parsed.scheme != "https":
+        result["score"] -= 20
+        result["recommendations"].append("Site is not using HTTPS")
+    else:
+        try:
+            https_info = get_https_info(parsed.hostname)
+            result["https"] = https_info
+
+            tls = https_info.get("tls_version", "")
+            result["checks"]["tls_version"] = tls
+
+            if tls in ("TLSv1", "TLSv1.1"):
+                result["score"] -= 15
+                result["recommendations"].append(f"Insecure TLS version supported: {tls}")
+
+        except Exception:
+            result["score"] -= 10
+            result["recommendations"].append("HTTPS certificate / TLS issue")
+
+    # HTTP → HTTPS redirect
+    redirect_ok = check_http_redirect(parsed.hostname)
+    result["checks"]["http_to_https_redirect"] = redirect_ok
+    if not redirect_ok:
+        result["score"] -= 10
+        result["recommendations"].append("HTTP does not properly redirect to HTTPS")
+
+    result["score"] = max(result["score"], 0)
+    return result
+
+def render_html(data, path):
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Web Hardening Auditor Report</title>
+<style>
+body {{ font-family: Arial; background:#0f172a; color:#e5e7eb; padding:20px }}
+.card {{ background:#020617; padding:20px; border-radius:10px; max-width:900px; margin:auto }}
+h1 {{ color:#38bdf8 }}
+.bad {{ color:#f87171 }}
+.good {{ color:#4ade80 }}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Web Hardening Auditor</h1>
+<p><b>Target:</b> {data['url']}</p>
+<p><b>Score:</b> {data['score']}/100</p>
+<p><b>Time:</b> {data['timestamp']}</p>
+
+<h2>Security headers</h2>
+<ul>
+{''.join(f"<li>{k}: <span class={'good' if v=='present' else 'bad'}>{v}</span></li>" for k,v in data['headers'].items())}
+</ul>
+
+<h2>Additional checks</h2>
+<ul>
+<li>TLS version: {data.get('https',{}).get('tls_version','unknown')}</li>
+<li>HTTP → HTTPS redirect: <span class={'good' if data['checks'].get('http_to_https_redirect') else 'bad'}>{data['checks'].get('http_to_https_redirect')}</span></li>
+</ul>
+
+<h2>Recommendations</h2>
+<ul>
+{''.join(f"<li>{r}</li>" for r in data['recommendations']) or "<li>All good 🎉</li>"}
+</ul>
+
+<p><small>Note: Lightweight hardening auditor, not a full vulnerability scanner.</small></p>
+</div>
+</body>
+</html>"""
+    with open(path, "w") as f:
+        f.write(html)
+
+def main():
+    parser = argparse.ArgumentParser(description="Web Hardening Auditor")
+    parser.add_argument("url", help="Target URL (https://example.com)")
+    args = parser.parse_args()
+
+    data = audit(args.url)
+
+    ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    json_path = f"reports/report_{ts}.json"
+    html_path = f"reports/report_{ts}.html"
+
+    with open(json_path, "w") as f:
+        json.dump(data, f, indent=2)
+
+    render_html(data, html_path)
+
+    print("[+] Audit complete")
+    print(f"[+] Score: {data['score']}/100")
+    print(f"[+] JSON report: {json_path}")
+    print(f"[+] HTML report: {html_path}")
+
+if __name__ == "__main__":
+    main()

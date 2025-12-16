@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+
+import requests
+import ssl
+import socket
+import argparse
+import json
+from urllib.parse import urlparse
+from datetime import datetime, timezone
+from pathlib import Path
+
+SECURITY_HEADERS = [
+    "Content-Security-Policy",
+    "Strict-Transport-Security",
+    "X-Frame-Options",
+    "X-Content-Type-Options",
+    "Referrer-Policy",
+    "Permissions-Policy",
+]
+
+def get_https_info(host):
+    ctx = ssl.create_default_context()
+    with socket.create_connection((host, 443), timeout=5) as sock:
+        with ctx.wrap_socket(sock, server_hostname=host) as ssock:
+            cert = ssock.getpeercert()
+            tls_version = ssock.version()
+            return {
+                "issuer": dict(x[0] for x in cert.get("issuer", [])),
+                "expires": cert.get("notAfter"),
+                "tls_version": tls_version,
+            }
+
+def check_http_redirect(host):
+    try:
+        r = requests.get(f"http://{host}", allow_redirects=False, timeout=5)
+        loc = r.headers.get("Location", "")
+        return loc.startswith("https://")
+    except Exception:
+        return False
+
+def audit(url):
+    result = {
+        "url": url,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "headers": {},
+        "cookies": [],
+        "https": {},
+        "checks": {},
+        "leaks": [],
+        "score": 100,
+        "recommendations": []
+    }
+
+    r = requests.get(url, timeout=10)
+    headers = r.headers
+
+    # Security headers
+    for h in SECURITY_HEADERS:
+        if h in headers:
+            result["headers"][h] = "present"
+        else:
+            result["headers"][h] = "missing"
+            result["score"] -= 8
+            result["recommendations"].append(f"Missing security header: {h}")
+
+    # Cookies
+    for c in r.cookies:
+        flags = {
+            "secure": c.secure,
+            "httponly": "HttpOnly" in c._rest,
+            "samesite": c._rest.get("SameSite")
+        }
+        result["cookies"].append({c.name: flags})
+        if not flags["secure"]:
+            result["score"] -= 5
+            result["recommendations"].append(f"Cookie {c.name} is not Secure")
+
+    # Info leakage
+    for leak in ["Server", "X-Powered-By"]:
+        if leak in headers:
+            result["leaks"].append({leak: headers[leak]})
+            result["score"] -= 5
+            result["recommendations"].append(f"Information leak header exposed: {leak}")
+
+    parsed = urlparse(url)
+
+    # HTTPS + TLS
+    if parsed.scheme != "https":
+        result["score"] -= 20
+        result["recommendations"].append("Site is not using HTTPS")
+    else:
+        try:
+            https_info = get_https_info(parsed.hostname)
+            result["https"] = https_info
+
+            tls = https_info.get("tls_version", "")
+            result["checks"]["tls_version"] = tls
+
+            if tls in ("TLSv1", "TLSv1.1"):
+                result["score"] -= 15
+                result["recommendations"].append(f"Insecure TLS version supported: {tls}")
+
+        except Exception:
+            result["score"] -= 10
+            result["recommendations"].append("HTTPS certificate / TLS issue")
+
+    # HTTP → HTTPS redirect
+    redirect_ok = check_http_redirect(parsed.hostname)
+    result["checks"]["http_to_https_redirect"] = redirect_ok
+    if not redirect_ok:
+        result["score"] -= 10
+        result["recommendations"].append("HTTP does not properly redirect to HTTPS")
+
+    result["score"] = max(result["score"], 0)
+    return result
+
+def render_html(data, path):
+    # Minimal, portfolio-friendly report (dark card style)
+    def li(label, value, good_when_present=False):
+        if good_when_present:
+            cls = "good" if value == "present" else "bad"
+        else:
+            cls = "good" if value in (True, "true", "yes") else "bad"
+        return f"<li>{label}: <span class='{cls}'>{value}</span></li>"
+
+    headers_html = "".join(
+        f"<li>{k}: <span class='{'good' if v=='present' else 'bad'}'>{v}</span></li>"
+        for k, v in (data.get("headers") or {}).items()
+    ) or "<li class='muted'>No data</li>"
+
+    leaks = data.get("leaks") or []
+    leaks_html = ""
+    for item in leaks:
+        if isinstance(item, dict):
+            for k, v in item.items():
+                leaks_html += f"<li>{k}: <span class='bad'>{v}</span></li>"
+    if not leaks_html:
+        leaks_html = "<li class='good'>No obvious leakage headers found</li>"
+
+    add = data.get("additional") or {}
+    add_html = ""
+    for k, v in add.items():
+        add_html += f"<li>{k}: <span class='muted'>{v}</span></li>"
+    if not add_html:
+        add_html = "<li class='muted'>No additional checks</li>"
+
+    recs = data.get("recommendations") or []
+    recs_html = "".join(f"<li>{r}</li>" for r in recs) or "<li class='good'>All good 🎉</li>"
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Hardening Auditor Report</title>
+  <style>
+    :root {{
+      --bg: #0f172a;
+      --card: #020617;
+      --border: rgba(148,163,184,.18);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --good: #4ade80;
+      --bad: #f87171;
+    }}
+    body {{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: var(--bg);
+      color: var(--text);
+      padding: 22px;
+    }}
+    .card {{
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }}
+    h1 {{
+      margin: 0 0 10px 0;
+      font-size: 22px;
+      color: var(--accent);
+      letter-spacing: .2px;
+    }}
+    .pill {{
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.08);
+      border: 1px solid var(--border);
+      margin: 6px 8px 0 0;
+      font-size: 14px;
+    }}
+    h2 {{
+      margin-top: 18px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }}
+    ul {{ margin: 0; padding-left: 18px; }}
+    li {{ margin: 6px 0; line-height: 1.25rem; }}
+    .good {{ color: var(--good); font-weight: 600; }}
+    .bad {{ color: var(--bad); font-weight: 700; }}
+    .muted {{ color: var(--muted); }}
+    .note {{
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Web Hardening Auditor</h1>
+
+    <div class="pill"><b>Target:</b> {data.get('url','')}</div>
+    <div class="pill"><b>Score:</b> {data.get('score',0)}/100</div>
+    <div class="pill"><b>Time:</b> {data.get('timestamp','')}</div>
+
+    <h2>Security headers</h2>
+    <ul>{headers_html}</ul>
+
+    <h2>Information leakage</h2>
+    <ul>{leaks_html}</ul>
+
+    <h2>Additional checks</h2>
+    <ul>{add_html}</ul>
+
+    <h2>Recommendations</h2>
+    <ul>{recs_html}</ul>
+
+    <div class="note">Note: This is a lightweight hardening auditor, not a full vulnerability scanner.</div>
+  </div>
+</body>
+</html>
+"""
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(html)
+def main():
+    parser = argparse.ArgumentParser(description="Web Hardening Auditor")
+    parser.add_argument("url", help="Target URL (https://example.com)")
+    args = parser.parse_args()
+
+    data = audit(args.url)
+
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    json_path = f"reports/report_{ts}.json"
+    html_path = f"reports/report_{ts}.html"
+
+    with open(json_path, "w") as f:
+        json.dump(data, f, indent=2)
+
+    render_html(data, html_path)
+
+    print("[+] Audit complete")
+    print(f"[+] Score: {data['score']}/100")
+    print(f"[+] JSON report: {json_path}")
+    print(f"[+] HTML report: {html_path}")
+
+if __name__ == "__main__":
+    main()
