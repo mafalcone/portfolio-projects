@@ -47,14 +47,14 @@ pip install -r requirements.txt
 
 ---
 
-Run an audit
+## Run an audit
 
 python audit.py https://example.com
 
 
 ---
 
-Output
+## Output
 
 Reports are saved under:
 
@@ -68,7 +68,7 @@ Open the .html file in a browser to view the visual report.
 
 ---
 
-Notes
+## Notes
 
 Results may vary depending on CDNs/WAFs and server configuration.
 
@@ -78,7 +78,7 @@ This is intended for educational + portfolio demonstration.
 
 ---
 
-Author
+## Author
 
 Manuel Falcone
 Portfolio project – Security / Infra
