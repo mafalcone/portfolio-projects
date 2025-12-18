@@ -1,16 +1,47 @@
 # Log Monitor
 
-System monitoring tool that tracks resource usage and basic logs.
+Backend service for monitoring application logs and system metrics, with a web dashboard for visualization.
 
-## Features
-- CPU usage monitoring
-- Memory usage monitoring
-- Real-time log output
+Designed as a lightweight monitoring tool for production environments.
 
-## Tech Stack
+---
+
+## 🌐 Public Deployment
+
+API & Dashboard:
+https://portfolio-projects-production-6296.up.railway.app  
+Dashboard:
+https://portfolio-projects-production-6296.up.railway.app/dashboard
+
+---
+
+## 🧠 Features
+
+- Log ingestion and visualization
+- CPU and memory monitoring
+- Real-time dashboard
+- REST API endpoints
+- Designed for extensibility
+
+---
+
+## 🛠️ Tech Stack
+
 - Python
+- FastAPI
+- Uvicorn
+- psutil
+- Railway (deployment)
 
-## Use Cases
-- System administration
-- DevOps monitoring
-- Infrastructure diagnostics
+---
+
+## 📂 Repository
+
+https://github.com/mafalcone/portfolio-projects/tree/main/log_monitor_py
+
+---
+
+## 📌 Notes
+
+This project focuses on backend monitoring concepts and operational visibility.
+

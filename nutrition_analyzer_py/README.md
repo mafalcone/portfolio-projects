@@ -1,14 +1,43 @@
 # Nutrition Analyzer
 
-Tool that analyzes nutritional information for food items.
+Backend API for nutritional analysis of food items.
 
-## Features
-- Nutritional data lookup
-- Calorie and macro analysis
+Provides calorie and macronutrient data via a simple HTTP interface.
 
-## Tech Stack
+---
+
+## 🌐 Public Deployment
+
+API:
+https://portfolio-projects-production-3cb1.up.railway.app
+
+---
+
+## 🧠 Features
+
+- Food nutrition lookup
+- Calorie and macro calculation
+- JSON-based API
+- Lightweight and fast responses
+
+---
+
+## 🛠️ Tech Stack
+
 - Python
+- FastAPI
+- Uvicorn
+- Railway (deployment)
 
-## Use Cases
-- Health & fitness applications
-- Data processing pipelines
+---
+
+## 📂 Repository
+
+https://github.com/mafalcone/portfolio-projects/tree/main/nutrition_analyzer_py
+
+---
+
+## 📌 Notes
+
+Part of a backend-focused portfolio, emphasizing clean API design.
+

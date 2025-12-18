@@ -1,17 +1,44 @@
 # TaskPulse Frontend
 
-Frontend application for TaskPulse.
+Frontend application for the TaskPulse task management system.
 
-## Features
-- Login & registration
-- Task dashboard
+Provides authentication, task management UI and dashboard.
+
+---
+
+## 🌐 Public Deployment
+
+Frontend:
+https://portfolio-projects-dfi2.vercel.app
+
+---
+
+## 🧠 Features
+
+- User registration and login
 - Task creation and deletion
-- Logout
+- Dashboard interface
+- Secure API integration
 
-## Tech Stack
+---
+
+## 🛠️ Tech Stack
+
 - React
 - Vite
 - Tailwind CSS
+- Axios
+- Vercel (deployment)
 
-## Environment Variables
-- VITE_API_BASE_URL
+---
+
+## 📂 Repository
+
+https://github.com/mafalcone/portfolio-projects/tree/main/taskpulse_frontend
+
+---
+
+## 📌 Notes
+
+Designed to demonstrate clean frontend architecture and UX.
+

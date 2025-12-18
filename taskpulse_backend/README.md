@@ -1,21 +1,44 @@
 # TaskPulse Backend
 
-REST API for the TaskPulse application.
+REST API for the TaskPulse task management application.
 
-## Features
-- User registration and login
-- JWT authentication
+Handles authentication, task persistence and authorization.
+
+---
+
+## 🌐 Public Deployment
+
+API:
+https://portfolio-projects-production-7de7.up.railway.app
+
+---
+
+## 🧠 Features
+
+- User authentication (JWT)
 - Task CRUD operations
-- MongoDB persistence
+- Secure API endpoints
+- CORS configuration for frontend integration
 
-## Tech Stack
+---
+
+## 🛠️ Tech Stack
+
 - Node.js
 - Express
-- MongoDB
-- JWT
+- MongoDB (Atlas)
+- JWT Authentication
+- Railway (deployment)
 
-## Environment Variables
-- MONGO_URI
-- JWT_ACCESS_SECRET
-- JWT_REFRESH_SECRET
-- CORS_ORIGIN
+---
+
+## 📂 Repository
+
+https://github.com/mafalcone/portfolio-projects/tree/main/taskpulse_backend
+
+---
+
+## 📌 Notes
+
+Backend built with real-world security and scalability in mind.
+
