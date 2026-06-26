@@ -3,7 +3,7 @@ import jsPDF from 'jspdf'
 
 const emptyItem = {
   descripcion: '',
-  tipo: 'material', // material | mano_obra
+  tipo: 'material',
   cantidad: 1,
   precio: 0
 }
@@ -62,7 +62,7 @@ export default function App() {
     const doc = new jsPDF()
 
     doc.setFontSize(16)
-    doc.text('Presupuesto', 10, 15)
+    doc.text('Presupuesto de Servicio', 10, 15)
 
     doc.setFontSize(11)
     let y = 25
@@ -92,14 +92,15 @@ export default function App() {
     doc.setFontSize(13)
     doc.text(`TOTAL: $${totals.total.toFixed(2)}`, 10, y)
 
-    doc.save('presupuesto.pdf')
+    doc.save('presupuesto-servicio.pdf')
   }
 
   return (
     <div className="app">
       <header className="app-header">
         <div>
-          <h1>Presupuesto</h1>
+          <h1>Presupuesto de Servicio</h1>
+          <p className="subtitle">Calculadora web para materiales, mano de obra y total final.</p>
         </div>
         <button className="btn primary" onClick={handleExportPDF}>
           Exportar PDF
