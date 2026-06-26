@@ -10,11 +10,11 @@ This repository is organized for technical review, interviews and freelance/clie
 
 | Project | Area | Status | Why it matters |
 | --- | --- | --- | --- |
-| TaskPulse | Fullstack / MERN | Vercel frontend + optional backend | Shows React, routing, auth flow, API integration and CRUD logic. |
+| TaskPulse | Fullstack / MERN | Demo mode + optional backend | Shows React, routing, auth flow, API integration and CRUD logic. |
 | Log Monitor | Infrastructure / DevOps | Python API/dashboard | Strong fit for support, systems, monitoring and troubleshooting roles. |
 | Web Hardening Auditor | Cybersecurity / DevSecOps | Code-first security tool | Shows security headers, HTTPS/TLS, cookie flags and audit scoring concepts. |
 | Nutrition Analyzer | Python / FastAPI | Lightweight API/UI | Shows Python API design, templates and data lookup. |
-| Presupuesto Electrico | Frontend / real-world tooling | Static frontend candidate | Useful as a practical budgeting/operations tool tied to real service work. |
+| Presupuesto Electrico | Frontend / real-world tooling | Live static demo | Practical calculator for materials, labor and service estimates. |
 
 ---
 
@@ -58,7 +58,7 @@ Rules:
 
 ## Current Deployment Notes
 
-The old Railway and Vercel URLs should be treated as historical references, not as guaranteed live demos. If a live deployment is unavailable, reviewers should use the code, local instructions and screenshots/demo mode.
+The current permanent public Vercel deployment is the `portfolio-projects-self` domain.
 
 Recommended stable setup:
 
