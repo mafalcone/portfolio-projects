@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: portfolio-nutrition-analyzer
+    runtime: python
+    rootDir: nutrition_analyzer_py
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+
+  - type: web
+    name: portfolio-log-monitor
+    runtime: python
+    rootDir: log_monitor_py
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+
+  - type: web
+    name: portfolio-taskpulse-backend
+    runtime: node
+    rootDir: taskpulse_backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
