@@ -25,6 +25,14 @@ const foods = [
   { name: 'Banana', kcal: 89, protein: 1.1, carbs: 23, fat: 0.3 }
 ]
 
+const headerLabels = {
+  csp: 'Content-Security-Policy',
+  hsts: 'Strict-Transport-Security',
+  frameOptions: 'X-Frame-Options',
+  contentTypeOptions: 'X-Content-Type-Options',
+  referrerPolicy: 'Referrer-Policy'
+}
+
 function toNumber(value) {
   const parsed = parseFloat(String(value).replace(',', '.'))
   return Number.isNaN(parsed) ? 0 : parsed
@@ -49,7 +57,8 @@ export default function PublicPortfolioV2() {
   ])
 
   const stats = useMemo(() => parseLogs(logs), [logs])
-  const filteredFoods = useMemo(() => foods.filter(food => food.name.toLowerCase().includes(foodQuery.toLowerCase())), [foodQuery])
+  const query = foodQuery.trim().toLowerCase()
+  const filteredFoods = useMemo(() => query ? foods.filter(food => food.name.toLowerCase().includes(query)) : [], [query])
   const totals = useMemo(() => items.reduce((acc, item) => {
     const subtotal = toNumber(item.quantity) * toNumber(item.price)
     if (item.type === 'labor') acc.labor += subtotal
@@ -57,6 +66,8 @@ export default function PublicPortfolioV2() {
     acc.total += subtotal
     return acc
   }, { materials: 0, labor: 0, total: 0 }), [items])
+
+  const headerRows = siteResult?.headers ? Object.entries(headerLabels).map(([key, label]) => ({ label, value: siteResult.headers[key] })) : []
 
   function updateItem(index, field, value) {
     setItems(prev => prev.map((item, i) => i === index ? { ...item, [field]: value } : item))
@@ -102,13 +113,13 @@ export default function PublicPortfolioV2() {
     </section>
 
     <section className="section">
-      {active === 'taskpulse' && <div><div className="section-header"><p className="eyebrow">Live app</p><h2>TaskPulse</h2><p>The public demo opens in a separate tab and stores demo tasks locally in the browser.</p></div><a className="btn primary" href="https://portfolio-projects-dfi2.vercel.app" target="_blank" rel="noreferrer">Open TaskPulse demo</a></div>}
+      {active === 'taskpulse' && <div><div className="section-header"><p className="eyebrow">Live app</p><h2>TaskPulse</h2><p>Register with a valid email and password, then login to manage browser-local demo tasks.</p></div><a className="btn primary" href="https://portfolio-projects-dfi2.vercel.app" target="_blank" rel="noreferrer">Open TaskPulse demo</a></div>}
 
       {active === 'logs' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Log Monitor</h2><p>Paste logs and inspect operational severity counts.</p></div><textarea style={{width:'100%',minHeight:160,borderRadius:16,padding:16,background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={logs} onChange={e => setLogs(e.target.value)} /><div className="totals"><div className="card"><h3>Total</h3><p>{stats.total}</p></div><div className="card"><h3>Info</h3><p>{stats.info}</p></div><div className="card"><h3>Warnings</h3><p>{stats.warn}</p></div><div className="card"><h3>Errors</h3><p>{stats.error}</p></div></div><div className="table-wrapper" style={{marginTop:16}}>{stats.rows.slice(-5).map((row, i) => <p key={i} style={{margin:'8px 0',color:'#cbd5e1'}}>{row}</p>)}</div></div>}
 
-      {active === 'site' && <div><div className="section-header"><p className="eyebrow">Live API demo</p><h2>Site Check</h2><p>Runs through a Vercel serverless function and returns real response data.</p></div><div className="hero-actions"><input style={{flex:1,minWidth:260,borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={target} onChange={e => setTarget(e.target.value)} /><button className="btn primary" onClick={runSiteCheck}>{siteLoading ? 'Checking...' : 'Run check'}</button></div>{siteResult && <div className="table-wrapper" style={{marginTop:16}}><p>Status: {siteResult.status || siteResult.error}</p><p>Score: {siteResult.score ?? '-'}/100</p><p>Response time: {siteResult.timeMs ?? '-'} ms</p><p>Final URL: {siteResult.finalUrl || '-'}</p></div>}</div>}
+      {active === 'site' && <div><div className="section-header"><p className="eyebrow">Live API demo</p><h2>Site Check</h2><p>Runs through a Vercel serverless function and builds a readable report from real response data.</p></div><div className="hero-actions"><input style={{flex:1,minWidth:260,borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={target} onChange={e => setTarget(e.target.value)} /><button className="btn primary" onClick={runSiteCheck}>{siteLoading ? 'Checking...' : 'Run check'}</button></div>{siteResult && <div className="table-wrapper" style={{marginTop:16}}><h3>Report summary</h3><p>Status: {siteResult.status || siteResult.error}</p><p>Score: {siteResult.score ?? '-'}/100</p><p>Response time: {siteResult.timeMs ?? '-'} ms</p><p>Final URL: {siteResult.finalUrl || '-'}</p>{headerRows.length > 0 && <><h3 style={{marginTop:18}}>Header checks</h3>{headerRows.map(row => <p key={row.label}><strong>{row.label}:</strong> {row.value || 'Missing'}</p>)}</>}</div>}</div>}
 
-      {active === 'nutrition' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Nutrition Analyzer</h2><p>Search available foods: {foods.map(food => food.name).join(', ')}.</p></div><input style={{width:'100%',borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={foodQuery} onChange={e => setFoodQuery(e.target.value)} placeholder="Search food" /><div className="project-grid" style={{marginTop:16}}>{filteredFoods.map(food => <div className="project-card" key={food.name}><h3>{food.name}</h3><p>{food.kcal} kcal · {food.protein}g protein · {food.carbs}g carbs · {food.fat}g fat</p></div>)}</div></div>}
+      {active === 'nutrition' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Nutrition Analyzer</h2><p>Available foods: {foods.map(food => food.name).join(', ')}.</p></div><input style={{width:'100%',borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={foodQuery} onChange={e => setFoodQuery(e.target.value)} placeholder="Search food" />{!query && <p style={{color:'#cbd5e1',marginTop:16}}>Type a food name to see the nutrition card.</p>}{query && filteredFoods.length === 0 && <p style={{color:'#cbd5e1',marginTop:16}}>No match in the demo dataset.</p>}<div className="project-grid" style={{marginTop:16}}>{filteredFoods.map(food => <div className="project-card" key={food.name}><h3>{food.name}</h3><p>{food.kcal} kcal · {food.protein}g protein · {food.carbs}g carbs · {food.fat}g fat</p></div>)}</div></div>}
 
       {active === 'estimate' && <div id="estimate-demo"><div className="section-header"><p className="eyebrow">Live demo</p><h2>Service estimate calculator</h2><p>Edit materials and labor, calculate totals and export a PDF.</p></div><div className="table-wrapper"><table className="items-table"><thead><tr><th>Description</th><th>Type</th><th>Qty.</th><th>Unit price</th><th>Subtotal</th></tr></thead><tbody>{items.map((item, index) => { const subtotal = toNumber(item.quantity) * toNumber(item.price); return <tr key={index}><td><input value={item.description} onChange={e => updateItem(index, 'description', e.target.value)} /></td><td><select value={item.type} onChange={e => updateItem(index, 'type', e.target.value)}><option value="material">Material</option><option value="labor">Labor</option></select></td><td><input type="number" value={item.quantity} onChange={e => updateItem(index, 'quantity', e.target.value)} /></td><td><input type="number" value={item.price} onChange={e => updateItem(index, 'price', e.target.value)} /></td><td className="numeric">${subtotal.toFixed(2)}</td></tr> })}</tbody></table><div className="table-actions"><button className="btn secondary" onClick={() => setItems(prev => [...prev, { description: '', type: 'material', quantity: 1, price: 0 }])}>+ Add item</button><button className="btn primary" onClick={exportPdf}>Export PDF</button></div></div><div className="totals"><div className="card"><h3>Materials</h3><p>${totals.materials.toFixed(2)}</p></div><div className="card"><h3>Labor</h3><p>${totals.labor.toFixed(2)}</p></div><div className="card total"><h3>Total</h3><p>${totals.total.toFixed(2)}</p></div></div></div>}
     </section>
