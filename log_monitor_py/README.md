@@ -21,11 +21,18 @@ FastAPI dashboard for log parsing and basic system visibility.
 ## Run locally
 
 ```bash
+cd log_monitor_py
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Open the local dashboard in the browser after the server starts.
+Open the local dashboard after the server starts:
+
+- `/`
+- `/dashboard`
+- `/api/metrics/cpu`
+- `/api/metrics/memory`
+- `/api/processes`
 
 ## Notes
 
