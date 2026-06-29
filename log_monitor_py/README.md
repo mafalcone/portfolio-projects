@@ -1,47 +1,32 @@
 # Log Monitor
 
-Backend service for monitoring application logs and system metrics, with a web dashboard for visualization.
+FastAPI dashboard for log parsing and basic system visibility.
 
-Designed as a lightweight monitoring tool for production environments.
+## Features
 
----
+- Log parsing and visualization
+- CPU and memory metrics
+- Process list endpoint
+- Dashboard and REST API routes
+- Lightweight structure for monitoring/troubleshooting demos
 
-## 🌐 Public Deployment
-
-API & Dashboard:
-https://portfolio-projects-production-6296.up.railway.app  
-Dashboard:
-https://portfolio-projects-production-6296.up.railway.app/dashboard
-
----
-
-## 🧠 Features
-
-- Log ingestion and visualization
-- CPU and memory monitoring
-- Real-time dashboard
-- REST API endpoints
-- Designed for extensibility
-
----
-
-## 🛠️ Tech Stack
+## Tech stack
 
 - Python
 - FastAPI
 - Uvicorn
+- Jinja2
 - psutil
-- Railway (deployment)
 
----
+## Run locally
 
-## 📂 Repository
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
-https://github.com/mafalcone/portfolio-projects/tree/main/log_monitor_py
+Open the local dashboard in the browser after the server starts.
 
----
+## Notes
 
-## 📌 Notes
-
-This project focuses on backend monitoring concepts and operational visibility.
-
+This project is intended to show infrastructure, support and operational troubleshooting concepts through a compact Python/FastAPI implementation.
