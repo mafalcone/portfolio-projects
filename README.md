@@ -1,76 +1,35 @@
 # Portfolio Projects – Manuel Falcone
 
-Curated technical portfolio focused on real-world IT, backend, frontend, automation, infrastructure and security work.
+Technical portfolio focused on IT infrastructure, support operations, backend/frontend development, automation and security tooling.
 
-This repository is organized for technical review, interviews and freelance/client validation. Each project should be easy to inspect, run locally and understand even when a free hosting provider is sleeping, expired or offline.
+## Public portfolio
 
----
+The public landing page is deployed on Vercel under the `portfolio-projects-self` domain.
 
-## Project Index
+## Featured projects
 
-| Project | Area | Status | Why it matters |
+| Project | Area | Access | Summary |
 | --- | --- | --- | --- |
-| TaskPulse | Fullstack / MERN | Demo mode + optional backend | Shows React, routing, auth flow, API integration and CRUD logic. |
-| Log Monitor | Infrastructure / DevOps | Python API/dashboard | Strong fit for support, systems, monitoring and troubleshooting roles. |
-| Web Hardening Auditor | Cybersecurity / DevSecOps | Code-first security tool | Shows security headers, HTTPS/TLS, cookie flags and audit scoring concepts. |
-| Nutrition Analyzer | Python / FastAPI | Lightweight API/UI | Shows Python API design, templates and data lookup. |
-| Presupuesto Electrico | Frontend / real-world tooling | Live static demo | Practical calculator for materials, labor and service estimates. |
+| TaskPulse | Fullstack / MERN | Live frontend demo | Task management app with authentication flow, API integration and CRUD behavior. |
+| Log Monitor | Infrastructure / DevOps | Source + local dashboard | FastAPI dashboard for logs, CPU, memory and process visibility. |
+| Web Hardening Auditor | Cybersecurity / DevSecOps | CLI + report generator | Passive security hardening audit for headers, HTTPS/TLS signals, cookies and information leakage. |
+| Nutrition Analyzer | Python / API | Source + local API/UI | Small FastAPI application for food lookup and nutritional data. |
+| Service Estimate Calculator | Frontend | Live demo inside portfolio | Editable calculator for materials, labor, subtotals and PDF export. |
 
----
+## Repository structure
 
-## Recommended Project Categories
+- `presupuesto_electrico/` – public portfolio landing and service estimate demo.
+- `taskpulse_frontend/` – React/Vite frontend for TaskPulse.
+- `taskpulse_backend/` – Node/Express API for TaskPulse.
+- `log_monitor_py/` – Python/FastAPI log and system metrics dashboard.
+- `web_hardening_auditor/` – passive security audit CLI and report generator.
+- `nutrition_analyzer_py/` – Python/FastAPI nutritional lookup app.
 
-### Infrastructure / Support / DevOps
-- `log_monitor_py`
-- `smart_todos_api`
-- TaskPulse backend health/API structure
+## Notes
 
-### Cybersecurity / DevSecOps
-- `web_hardening_auditor`
-- `security_scanner`
-
-### Fullstack
-- `taskpulse_frontend`
-- `taskpulse_backend`
-- `presupuesto_electrico`
-
-### Python / Automation
-- `nutrition_analyzer_py`
-- `ai_summarizer`
-
----
-
-## Deployment Strategy
-
-Free hosting platforms can sleep, expire or require billing. The portfolio should not depend only on a live backend.
-
-Rules:
-
-1. Keep code-first projects even if the live demo is offline.
-2. Use screenshots and local run instructions as fallback.
-3. Mark every project as one of: `Live`, `Demo mode`, `Code-first`, or `Needs backend env`.
-4. Do not keep broken Railway links as the main call-to-action.
-5. Prefer Vercel for static/frontends.
-6. Prefer Render Free or another lightweight Python host for simple FastAPI apps.
-7. For TaskPulse, keep the frontend deployable even without backend by using demo/mock mode.
-
----
-
-## Current Deployment Notes
-
-The current permanent public Vercel deployment is the `portfolio-projects-self` domain.
-
-Recommended stable setup:
-
-- TaskPulse frontend: Vercel, root `taskpulse_frontend`.
-- TaskPulse backend: Render/Railway/Node host with MongoDB env vars.
-- Nutrition Analyzer: Render Free or local FastAPI demo.
-- Log Monitor: Render Free or local FastAPI dashboard.
-- Security tools: code-first with sample output reports.
-
----
+Some projects are live demos. Others are code-first projects with local run instructions because they require backend services, database credentials or a controlled runtime.
 
 ## Author
 
 **Manuel Falcone**  
-IT Consultant – Backend – Frontend – Infrastructure – Security – Automation
+IT Consultant – Infrastructure – Support – Backend – Frontend – Security – Automation
