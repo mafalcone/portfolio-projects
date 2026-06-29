@@ -4,20 +4,34 @@ const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_UR
 const useLiveApi = import.meta.env.VITE_USE_LIVE_API === "true" && Boolean(baseURL);
 
 function makeDemoApi() {
+  const usersKey = "taskpulse_demo_users";
+
+  const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+
+  const readUsers = () => {
+    const saved = localStorage.getItem(usersKey);
+    return saved ? JSON.parse(saved) : [];
+  };
+
+  const saveUsers = (users) => localStorage.setItem(usersKey, JSON.stringify(users));
+
+  const taskKey = () => `taskpulse_demo_tasks_${localStorage.getItem("userEmail") || "guest"}`;
+
   const readTasks = () => {
-    const saved = localStorage.getItem("taskpulse_demo_tasks");
+    const saved = localStorage.getItem(taskKey());
     if (saved) return JSON.parse(saved);
     const tasks = [
       { id: "demo-1", title: "Review production alerts", done: true },
       { id: "demo-2", title: "Check backup status", done: false },
       { id: "demo-3", title: "Document troubleshooting steps", done: false },
     ];
-    localStorage.setItem("taskpulse_demo_tasks", JSON.stringify(tasks));
+    localStorage.setItem(taskKey(), JSON.stringify(tasks));
     return tasks;
   };
 
-  const saveTasks = (tasks) => localStorage.setItem("taskpulse_demo_tasks", JSON.stringify(tasks));
+  const saveTasks = (tasks) => localStorage.setItem(taskKey(), JSON.stringify(tasks));
   const response = (data) => Promise.resolve({ data });
+  const reject = (message) => Promise.reject({ response: { data: { error: message } }, message });
 
   return {
     get: async (path) => {
@@ -25,11 +39,26 @@ function makeDemoApi() {
       return response({ mode: "demo" });
     },
     post: async (path, payload = {}) => {
-      if (path === "/auth/register" || path === "/auth/login") {
-        localStorage.setItem("accessToken", "demo");
-        localStorage.setItem("userEmail", payload.email || "demo@taskpulse.local");
-        return response({ accessToken: "demo", user: { email: payload.email || "demo@taskpulse.local" }, mode: "demo" });
+      const email = String(payload.email || "").trim().toLowerCase();
+      const password = String(payload.password || "");
+
+      if (!isEmail(email)) return reject("Enter a valid email address.");
+      if (password.length < 6) return reject("Password must have at least 6 characters.");
+
+      if (path === "/auth/register") {
+        const users = readUsers();
+        if (!users.includes(email)) saveUsers([email, ...users]);
+        return response({ user: { email }, mode: "demo" });
       }
+
+      if (path === "/auth/login") {
+        if (!readUsers().includes(email)) return reject("User not found. Register first in this demo.");
+        const token = `demo-${Date.now()}`;
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("userEmail", email);
+        return response({ accessToken: token, user: { email }, mode: "demo" });
+      }
+
       if (path === "/tasks") {
         const tasks = readTasks();
         const task = { id: String(Date.now()), title: payload.title || "Untitled task", done: false };
