@@ -7,6 +7,7 @@ function makeDemoApi() {
   const usersKey = "taskpulse_demo_users";
 
   const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+  const makeProof = (email, value) => btoa(`${email}:${value}`);
 
   const readUsers = () => {
     const saved = localStorage.getItem(usersKey);
@@ -40,19 +41,22 @@ function makeDemoApi() {
     },
     post: async (path, payload = {}) => {
       const email = String(payload.email || "").trim().toLowerCase();
-      const password = String(payload.password || "");
+      const value = String(payload.password || "");
 
       if (!isEmail(email)) return reject("Enter a valid email address.");
-      if (password.length < 6) return reject("Password must have at least 6 characters.");
+      if (value.length < 6) return reject("Password must have at least 6 characters.");
 
       if (path === "/auth/register") {
         const users = readUsers();
-        if (!users.includes(email)) saveUsers([email, ...users]);
+        if (users.some((user) => user.email === email)) return reject("User already exists. Login instead.");
+        saveUsers([{ email, proof: makeProof(email, value) }, ...users]);
         return response({ user: { email }, mode: "demo" });
       }
 
       if (path === "/auth/login") {
-        if (!readUsers().includes(email)) return reject("User not found. Register first in this demo.");
+        const user = readUsers().find((item) => item.email === email);
+        if (!user) return reject("User not found. Register first in this demo.");
+        if (user.proof !== makeProof(email, value)) return reject("Invalid email or password.");
         const token = `demo-${Date.now()}`;
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userEmail", email);
