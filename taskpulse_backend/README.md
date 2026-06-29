@@ -6,14 +6,13 @@ Handles authentication, task persistence and authorization.
 
 ---
 
-## 🌐 Public Deployment
+## Access
 
-API:
-https://portfolio-projects-production-7de7.up.railway.app
+Source code and local run instructions.
 
 ---
 
-## 🧠 Features
+## Features
 
 - User authentication (JWT)
 - Task CRUD operations
@@ -22,23 +21,21 @@ https://portfolio-projects-production-7de7.up.railway.app
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - Node.js
 - Express
 - MongoDB (Atlas)
 - JWT Authentication
-- Railway (deployment)
 
 ---
 
-## 📂 Repository
+## Repository
 
 https://github.com/mafalcone/portfolio-projects/tree/main/taskpulse_backend
 
 ---
 
-## 📌 Notes
+## Notes
 
 Backend built with real-world security and scalability in mind.
-
