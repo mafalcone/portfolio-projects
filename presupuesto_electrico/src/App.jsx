@@ -5,30 +5,34 @@ const projects = [
   {
     name: 'TaskPulse',
     area: 'Fullstack / MERN',
-    status: 'Demo mode + optional backend',
-    desc: 'Task management app with authentication flow, API integration and CRUD behavior.',
-    stack: 'React, Vite, Node.js, Express, MongoDB, JWT'
+    status: 'Live demo',
+    desc: 'Task management app with authentication flow, API integration and CRUD behavior. Runs as a public frontend demo and supports backend integration.',
+    stack: 'React, Vite, Node.js, Express, MongoDB, JWT',
+    href: 'https://portfolio-projects-dfi2.vercel.app'
   },
   {
     name: 'Log Monitor',
     area: 'Infrastructure / DevOps',
-    status: 'Code-first Python dashboard',
-    desc: 'Log parser and system metrics dashboard for CPU, memory, process and log visibility.',
-    stack: 'Python, FastAPI, Jinja2, psutil'
+    status: 'Source + local dashboard',
+    desc: 'FastAPI monitoring dashboard for logs, CPU, memory, process visibility and operational troubleshooting workflows.',
+    stack: 'Python, FastAPI, Jinja2, psutil',
+    href: 'https://github.com/mafalcone/portfolio-projects/tree/main/log_monitor_py'
   },
   {
     name: 'Web Hardening Auditor',
     area: 'Cybersecurity / DevSecOps',
-    status: 'Security auditing tool',
-    desc: 'Audits web security posture using headers, HTTPS/TLS checks, cookie flags and scoring.',
-    stack: 'Python, security checks, HTML reports'
+    status: 'CLI + report generator',
+    desc: 'Passive security hardening auditor for headers, HTTPS/TLS signals, cookie flags, information leakage and scoring.',
+    stack: 'Python, requests, SSL/socket, HTML reports',
+    href: 'https://github.com/mafalcone/portfolio-projects/tree/main/web_hardening_auditor'
   },
   {
     name: 'Nutrition Analyzer',
     area: 'Python / API',
-    status: 'Lightweight API/UI',
-    desc: 'Small FastAPI project for food lookup, nutritional data and clean API structure.',
-    stack: 'Python, FastAPI, Jinja2'
+    status: 'Source + local API',
+    desc: 'Small FastAPI application for food lookup, nutritional data and clean API/UI structure.',
+    stack: 'Python, FastAPI, Jinja2',
+    href: 'https://github.com/mafalcone/portfolio-projects/tree/main/nutrition_analyzer_py'
   }
 ]
 
@@ -97,22 +101,23 @@ export default function App() {
         <p className="eyebrow">Technical Portfolio</p>
         <h1>Manuel Falcone</h1>
         <p className="hero-text">
-          IT, infrastructure, support, backend/frontend, automation and security-oriented projects built for technical review.
+          Infrastructure, support, backend/frontend, automation and security-oriented projects with practical implementation details.
         </p>
         <div className="hero-actions">
-          <a className="btn primary" href="https://github.com/mafalcone/portfolio-projects" target="_blank" rel="noreferrer">View repository</a>
-          <a className="btn secondary" href="#projects">View projects</a>
+          <a className="btn primary" href="https://github.com/mafalcone/portfolio-projects" target="_blank" rel="noreferrer">Repository</a>
+          <a className="btn secondary" href="#projects">Projects</a>
         </div>
       </section>
 
       <section className="section" id="projects">
         <div className="section-header">
           <p className="eyebrow">Selected work</p>
-          <h2>Project index</h2>
+          <h2>Projects</h2>
+          <p>Each card opens either a live demo or the project source with setup instructions.</p>
         </div>
         <div className="project-grid">
           {projects.map(project => (
-            <article className="project-card" key={project.name}>
+            <a className="project-card" key={project.name} href={project.href} target="_blank" rel="noreferrer">
               <div className="card-topline">
                 <span>{project.area}</span>
                 <strong>{project.status}</strong>
@@ -120,12 +125,13 @@ export default function App() {
               <h3>{project.name}</h3>
               <p>{project.desc}</p>
               <small>{project.stack}</small>
-            </article>
+              <span className="card-link">Open project →</span>
+            </a>
           ))}
         </div>
       </section>
 
-      <section className="section calculator-section">
+      <section className="section calculator-section" id="service-estimate">
         <div className="section-header">
           <p className="eyebrow">Live demo</p>
           <h2>Service estimate calculator</h2>
