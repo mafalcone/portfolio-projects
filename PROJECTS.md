@@ -1,96 +1,59 @@
-# Portfolio Project Map
+# Project Details
 
-## Primary projects
+## TaskPulse
 
-### TaskPulse
-
-**Type:** Fullstack task management app  
+**Area:** Fullstack / MERN  
 **Stack:** React, Vite, Node.js, Express, MongoDB, JWT  
-**Folders:**
-- `taskpulse_frontend`
-- `taskpulse_backend`
+**Folders:** `taskpulse_frontend`, `taskpulse_backend`
 
-**Keep it.** This is one of the strongest projects because it shows a complete product shape: login/register, auth token handling, task CRUD and API separation.
+TaskPulse is a task management application with a separated frontend/backend structure. The frontend includes login/register flow, protected dashboard behavior and task CRUD interaction patterns.
 
-**Deployment recommendation:**
-- Frontend: Vercel
-- Backend: Render Free / Railway paid / any Node host
-- Database: MongoDB Atlas Free or compatible MongoDB URI
-
-**Important:** The frontend should support demo/mock mode when no backend URL is configured.
+**Current access:** public frontend demo and source code.
 
 ---
 
-### Log Monitor
+## Log Monitor
 
-**Type:** Monitoring dashboard and log parser  
+**Area:** Infrastructure / DevOps  
 **Stack:** Python, FastAPI, Jinja2, psutil  
 **Folder:** `log_monitor_py`
 
-**Keep it.** This project is highly aligned with infrastructure, support, systems administration, troubleshooting and DevOps.
+Log Monitor is a lightweight dashboard for operational visibility. It includes log parsing, CPU and memory metrics, process visibility and API routes for troubleshooting workflows.
 
-**Improvements to add later:**
-- screenshots
-- sample logs
-- health endpoint
-- clearer local run instructions
-- optional Dockerfile
+**Current access:** source code and local dashboard.
 
 ---
 
-### Web Hardening Auditor / Security Scanner
+## Web Hardening Auditor
 
-**Type:** Security auditing tool  
 **Area:** Cybersecurity / DevSecOps  
-**Folders:**
-- `web_hardening_auditor`
-- `security_scanner`
+**Stack:** Python, requests, SSL/socket, HTML reports  
+**Folder:** `web_hardening_auditor`
 
-**Keep it.** This helps position the portfolio for security and DevSecOps work.
+Web Hardening Auditor is a passive web review tool for checking HTTP security headers, HTTPS/TLS metadata, cookie flags, information leakage headers and scoring.
 
-**Improvements to add later:**
-- sample HTML report
-- example target output
-- scoring explanation
-- limitations and ethical-use note
+**Current access:** CLI and generated reports.
 
 ---
 
-### Nutrition Analyzer
+## Nutrition Analyzer
 
-**Type:** Lightweight Python API/UI  
+**Area:** Python / API  
 **Stack:** Python, FastAPI, Jinja2  
 **Folder:** `nutrition_analyzer_py`
 
-**Keep, but secondary.** It is useful to show Python/FastAPI basics, but it is not as strong as Log Monitor or TaskPulse for Manuel's main IT profile.
+Nutrition Analyzer is a compact FastAPI application for food lookup, nutritional data and a simple HTTP/API interface.
 
-**Improvement:**
-- add more real foods
-- add API examples
-- add tests
-- make the README less generic
+**Current access:** source code and local API/UI.
 
 ---
 
-### Presupuesto Electrico
+## Service Estimate Calculator
 
-**Type:** Budgeting/calculation frontend  
+**Area:** Frontend / business tooling  
+**Stack:** React, Vite, jsPDF  
 **Folder:** `presupuesto_electrico`
 
-**Keep.** It connects with Manuel's real-world technical/service background. Do not describe it as only a generic budget app.
+The Service Estimate Calculator is the live demo embedded in the public portfolio landing. It supports editable materials/labor rows, subtotals and PDF export.
 
-**Better positioning:**
-Real-world technical budgeting tool for electrical/security/IT service estimates.
-
----
-
-## What not to do
-
-Do not delete projects just because Railway or another free provider stopped hosting them.
-
-Instead:
-- remove broken live links from the main README,
-- mark deploy status clearly,
-- add screenshots,
-- keep local run instructions,
-- add stable demo/mock mode where possible.
+**Current access:** live demo inside the portfolio landing.
