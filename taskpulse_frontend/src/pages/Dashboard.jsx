@@ -10,6 +10,13 @@ export default function Dashboard() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
 
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => {
+      if (Boolean(a.done) !== Boolean(b.done)) return a.done ? 1 : -1;
+      return String(b.id || b._id || "").localeCompare(String(a.id || a._id || ""));
+    });
+  }, [items]);
+
   const doneCount = useMemo(() => items.filter(t => t.done).length, [items]);
 
   function logout() {
@@ -54,7 +61,6 @@ export default function Dashboard() {
     setBusy(true);
     setError(null);
     try {
-      // soporta backends que usen done/ completed
       const payload = { done: !t.done, completed: !t.done };
       await api.put(`/tasks/${t._id || t.id}`, payload);
       await load();
@@ -126,7 +132,7 @@ export default function Dashboard() {
               <p className="text-slate-400">No hay tareas. Agregá la primera.</p>
             ) : (
               <ul className="space-y-2">
-                {items.map((t) => (
+                {sortedItems.map((t) => (
                   <li
                     key={t._id || t.id}
                     className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950/40 px-3 py-2"
