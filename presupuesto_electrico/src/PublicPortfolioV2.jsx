@@ -57,7 +57,7 @@ function DetailPanel({ active }) {
       </ul>
     </div>
     {showSecurity && <div className="project-card" style={{ minHeight: 'auto' }}>
-      <div className="card-topline"><span>Security focus</span><strong>Blue-team / DevSecOps</strong></div>
+      <div className="card-topline"><span>Security angle</span><strong>Operational security review</strong></div>
       <ul style={{ color: '#cbd5e1', lineHeight: 1.6, paddingLeft: 18 }}>
         {securityFocus.map(item => <li key={item}>{item}</li>)}
       </ul>
@@ -96,16 +96,67 @@ export default function PublicPortfolioV2() {
 
   function exportPdf() {
     const doc = new jsPDF()
-    doc.setFontSize(16)
-    doc.text('Service Estimate', 10, 15)
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const navy = [2, 6, 23]
+    const orange = [249, 115, 22]
+    const slate = [71, 85, 105]
+
+    doc.setFillColor(...navy)
+    doc.rect(0, 0, pageWidth, 34, 'F')
+    doc.setTextColor(248, 250, 252)
+    doc.setFontSize(18)
+    doc.text('Service Estimate', 14, 17)
     doc.setFontSize(10)
-    let y = 25
-    items.forEach((item, index) => {
+    doc.text('Generated from Manuel Falcone technical portfolio demo', 14, 25)
+
+    doc.setDrawColor(...orange)
+    doc.setLineWidth(1.1)
+    doc.line(14, 39, pageWidth - 14, 39)
+
+    let y = 50
+    doc.setTextColor(...slate)
+    doc.setFontSize(9)
+    doc.text('DESCRIPTION', 14, y)
+    doc.text('TYPE', 92, y)
+    doc.text('QTY', 122, y)
+    doc.text('UNIT', 145, y)
+    doc.text('SUBTOTAL', 172, y)
+    y += 5
+
+    doc.setDrawColor(226, 232, 240)
+    doc.line(14, y, pageWidth - 14, y)
+    y += 8
+
+    items.forEach((item) => {
       const subtotal = toNumber(item.quantity) * toNumber(item.price)
-      doc.text(`${index + 1}. ${item.description || 'Item'} - $${subtotal.toFixed(2)}`, 10, y)
-      y += 6
+      if (y > 260) {
+        doc.addPage()
+        y = 22
+      }
+      doc.setTextColor(15, 23, 42)
+      doc.setFontSize(10)
+      doc.text(String(item.description || 'Item').slice(0, 34), 14, y)
+      doc.text(String(item.type || '-'), 92, y)
+      doc.text(String(item.quantity || 0), 122, y)
+      doc.text(`$${toNumber(item.price).toFixed(2)}`, 145, y)
+      doc.text(`$${subtotal.toFixed(2)}`, 172, y)
+      y += 8
     })
-    doc.text(`Total: $${totals.total.toFixed(2)}`, 10, y + 8)
+
+    y += 6
+    doc.setFillColor(241, 245, 249)
+    doc.roundedRect(118, y, 78, 34, 3, 3, 'F')
+    doc.setTextColor(...slate)
+    doc.setFontSize(9)
+    doc.text('Materials', 124, y + 9)
+    doc.text(`$${totals.materials.toFixed(2)}`, 168, y + 9)
+    doc.text('Labor', 124, y + 18)
+    doc.text(`$${totals.labor.toFixed(2)}`, 168, y + 18)
+    doc.setTextColor(...orange)
+    doc.setFontSize(12)
+    doc.text('Total', 124, y + 29)
+    doc.text(`$${totals.total.toFixed(2)}`, 166, y + 29)
+
     doc.save('service-estimate.pdf')
   }
 
