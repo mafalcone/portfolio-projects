@@ -11,8 +11,8 @@ The public landing page is deployed on Vercel under the `portfolio-projects-self
 | Project | Area | Access | Summary |
 | --- | --- | --- | --- |
 | TaskPulse | Fullstack / MERN | Public browser demo | Task management app with demo auth flow, dashboard and CRUD behavior using browser-local data. |
-| Log Monitor | Infrastructure / Ops | Interactive browser demo | Log parser that summarizes severity counts and recent operational events. |
-| Site Check | DevSecOps | Live API demo | Server-side URL check that returns status, response time and selected response headers. |
+| Incident Log Triage | Infrastructure / Blue Team | Interactive browser demo | Log parser that classifies events by type, severity and suggested next action. |
+| Web Hardening Review | DevSecOps / Security | Live API demo | Passive server-side review of response status, timing and security-related headers with copyable JSON report. |
 | Nutrition Analyzer | Python / API | Interactive browser demo | Food lookup demo with visible sample dataset and nutrition values. |
 | Service Estimate Calculator | Frontend | Public browser demo | Editable calculator for materials, labor, subtotals and PDF export. |
 
@@ -21,8 +21,8 @@ The public landing page is deployed on Vercel under the `portfolio-projects-self
 - `presupuesto_electrico/` – public portfolio landing, service estimate demo and site-check API endpoint.
 - `taskpulse_frontend/` – React/Vite frontend for TaskPulse public demo.
 - `taskpulse_backend/` – Node/Express API source for TaskPulse.
-- `log_monitor_py/` – Python/FastAPI log and system metrics dashboard source.
-- `web_hardening_auditor/` – passive site review CLI and report generator source.
+- `log_monitor_py/` – Python/FastAPI log and system metrics dashboard source behind the Incident Log Triage demo.
+- `web_hardening_auditor/` – passive site review CLI and report generator source behind the Web Hardening Review concept.
 - `nutrition_analyzer_py/` – Python/FastAPI nutritional lookup app source.
 
 ## Review notes
