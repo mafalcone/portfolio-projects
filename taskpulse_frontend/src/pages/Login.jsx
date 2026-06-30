@@ -45,7 +45,7 @@ export default function Login() {
       <div className="w-full max-w-sm rounded-2xl bg-slate-900/40 border border-slate-800 shadow-xl p-6">
         <h1 className="text-xl font-semibold">TaskPulse</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Sign in to manage your tasks.
+          Public demo. Register with any valid email and password, then manage browser-local tasks.
         </p>
 
         <form className="mt-5 space-y-3">
@@ -82,7 +82,7 @@ export default function Login() {
               disabled={loading}
               className="flex-1 rounded-xl bg-white text-slate-900 font-medium py-2 disabled:opacity-60"
             >
-              {loading ? "Signing in..." : "Login"}
+              {loading ? "Opening..." : "Login"}
             </button>
 
             <button
@@ -90,13 +90,13 @@ export default function Login() {
               disabled={loading}
               className="flex-1 rounded-xl bg-slate-800 text-white font-medium py-2 border border-slate-700 disabled:opacity-60"
             >
-              Register
+              Register demo
             </button>
           </div>
         </form>
 
         <p className="text-xs text-slate-400 mt-4">
-          Tip: Register with your email + password, then login.
+          Demo data is stored in this browser. No external backend is required for the public demo.
         </p>
       </div>
     </div>
