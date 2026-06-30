@@ -1,6 +1,10 @@
 export default function SiteReport({ result }) {
   if (!result) return null
 
+  async function copyReport() {
+    await navigator.clipboard.writeText(JSON.stringify(result, null, 2))
+  }
+
   if (result.error) {
     return <div className="table-wrapper" style={{ marginTop: 16 }}>
       <h3>Request failed</h3>
@@ -11,11 +15,13 @@ export default function SiteReport({ result }) {
   const checks = result.checks || []
 
   return <div className="table-wrapper" style={{ marginTop: 16 }}>
+    <div className="card-topline"><span>Report output</span><strong>Passive review</strong></div>
     <h3>Hardening report</h3>
     <p>Status: {result.status}</p>
     <p>Score: {result.score ?? '-'}/100</p>
     <p>Response time: {result.timeMs ?? '-'} ms</p>
     <p>Final URL: {result.finalUrl || '-'}</p>
+    <button className="btn secondary" style={{ marginTop: 12 }} onClick={copyReport}>Copy report JSON</button>
 
     {checks.length > 0 && <div style={{ marginTop: 18 }}>
       <h3>Checks</h3>
