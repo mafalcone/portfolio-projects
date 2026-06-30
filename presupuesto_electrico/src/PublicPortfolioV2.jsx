@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react'
 import jsPDF from 'jspdf'
 import { projectDetails, securityFocus } from './projectDetails'
+import SiteReport from './SiteReport'
 
 const projects = [
   { id: 'taskpulse', name: 'TaskPulse', area: 'Fullstack / MERN', status: 'Live app', desc: 'Task manager with login flow, dashboard and CRUD behavior.', stack: 'React, Vite, Node.js, Express, MongoDB' },
   { id: 'logs', name: 'Log Monitor', area: 'Infra / Ops', status: 'Interactive demo', desc: 'Log parser that summarizes severity and recent events.', stack: 'Python/FastAPI source + browser demo' },
-  { id: 'site', name: 'Site Check', area: 'DevSecOps', status: 'Live API demo', desc: 'Server-side URL check with status, response time and selected headers.', stack: 'Vercel Function + frontend report' },
+  { id: 'site', name: 'Web Hardening Review', area: 'DevSecOps', status: 'Live API demo', desc: 'Server-side review of response status, timing and security-related headers.', stack: 'Vercel Function + frontend report' },
   { id: 'nutrition', name: 'Nutrition Analyzer', area: 'Python / API', status: 'Interactive demo', desc: 'Food lookup with visible sample dataset and nutrition values.', stack: 'Python/FastAPI source + browser demo' },
   { id: 'estimate', name: 'Service Estimate', area: 'Frontend', status: 'Live demo', desc: 'Editable estimate calculator with PDF export.', stack: 'React, Vite, jsPDF' }
 ]
@@ -25,14 +26,6 @@ const foods = [
   { name: 'Oats', kcal: 389, protein: 16.9, carbs: 66, fat: 6.9 },
   { name: 'Banana', kcal: 89, protein: 1.1, carbs: 23, fat: 0.3 }
 ]
-
-const headerLabels = {
-  csp: 'Content-Security-Policy',
-  hsts: 'Strict-Transport-Security',
-  frameOptions: 'X-Frame-Options',
-  contentTypeOptions: 'X-Content-Type-Options',
-  referrerPolicy: 'Referrer-Policy'
-}
 
 function toNumber(value) {
   const parsed = parseFloat(String(value).replace(',', '.'))
@@ -87,8 +80,6 @@ export default function PublicPortfolioV2() {
     acc.total += subtotal
     return acc
   }, { materials: 0, labor: 0, total: 0 }), [items])
-
-  const headerRows = siteResult?.headers ? Object.entries(headerLabels).map(([key, label]) => ({ label, value: siteResult.headers[key] })) : []
 
   function updateItem(index, field, value) {
     setItems(prev => prev.map((item, i) => i === index ? { ...item, [field]: value } : item))
@@ -189,7 +180,7 @@ export default function PublicPortfolioV2() {
 
       {active === 'logs' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Log Monitor</h2><p>Paste logs and inspect operational severity counts.</p></div><textarea style={{width:'100%',minHeight:160,borderRadius:16,padding:16,background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={logs} onChange={e => setLogs(e.target.value)} /><div className="totals"><div className="card"><h3>Total</h3><p>{stats.total}</p></div><div className="card"><h3>Info</h3><p>{stats.info}</p></div><div className="card"><h3>Warnings</h3><p>{stats.warn}</p></div><div className="card"><h3>Errors</h3><p>{stats.error}</p></div></div><div className="table-wrapper" style={{marginTop:16}}>{stats.rows.slice(-5).map((row, i) => <p key={i} style={{margin:'8px 0',color:'#cbd5e1'}}>{row}</p>)}</div></div>}
 
-      {active === 'site' && <div><div className="section-header"><p className="eyebrow">Live API demo</p><h2>Site Check</h2><p>Runs through a Vercel serverless function and builds a readable report from real response data.</p></div><div className="hero-actions"><input style={{flex:1,minWidth:260,borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={target} onChange={e => setTarget(e.target.value)} /><button className="btn primary" onClick={runSiteCheck}>{siteLoading ? 'Checking...' : 'Run check'}</button></div>{siteResult && <div className="table-wrapper" style={{marginTop:16}}><h3>Report summary</h3><p>Status: {siteResult.status || siteResult.error}</p><p>Score: {siteResult.score ?? '-'}/100</p><p>Response time: {siteResult.timeMs ?? '-'} ms</p><p>Final URL: {siteResult.finalUrl || '-'}</p>{headerRows.length > 0 && <><h3 style={{marginTop:18}}>Header checks</h3>{headerRows.map(row => <p key={row.label}><strong>{row.label}:</strong> {row.value || 'Missing'}</p>)}</>}</div>}</div>}
+      {active === 'site' && <div><div className="section-header"><p className="eyebrow">Live API demo</p><h2>Web Hardening Review</h2><p>Runs through a Vercel serverless function and builds a passive hardening report from real response data.</p></div><div className="hero-actions"><input style={{flex:1,minWidth:260,borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={target} onChange={e => setTarget(e.target.value)} /><button className="btn primary" onClick={runSiteCheck}>{siteLoading ? 'Checking...' : 'Run check'}</button></div><SiteReport result={siteResult} /></div>}
 
       {active === 'nutrition' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Nutrition Analyzer</h2><p>Available foods: {foods.map(food => food.name).join(', ')}.</p></div><input style={{width:'100%',borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={foodQuery} onChange={e => setFoodQuery(e.target.value)} placeholder="Search food" />{!query && <p style={{color:'#cbd5e1',marginTop:16}}>Type a food name to see the nutrition card.</p>}{query && filteredFoods.length === 0 && <p style={{color:'#cbd5e1',marginTop:16}}>No match in the demo dataset.</p>}<div className="project-grid" style={{marginTop:16}}>{filteredFoods.map(food => <div className="project-card" key={food.name}><h3>{food.name}</h3><p>{food.kcal} kcal · {food.protein}g protein · {food.carbs}g carbs · {food.fat}g fat</p></div>)}</div></div>}
 
