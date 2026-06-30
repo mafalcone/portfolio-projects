@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import jsPDF from 'jspdf'
+import { projectDetails, securityFocus } from './projectDetails'
 
 const projects = [
   { id: 'taskpulse', name: 'TaskPulse', area: 'Fullstack / MERN', status: 'Live app', desc: 'Task manager with login flow, dashboard and CRUD behavior.', stack: 'React, Vite, Node.js, Express, MongoDB' },
@@ -42,6 +43,26 @@ function parseLogs(text) {
   const rows = text.split('\n').map(line => line.trim()).filter(Boolean)
   const count = token => rows.filter(row => row.toUpperCase().includes(token)).length
   return { rows, total: rows.length, info: count('INFO'), warn: count('WARN'), error: count('ERROR') }
+}
+
+function DetailPanel({ active }) {
+  const details = projectDetails[active] || []
+  const showSecurity = active === 'site' || active === 'logs'
+
+  return <div className="project-grid" style={{ marginTop: 24 }}>
+    <div className="project-card" style={{ minHeight: 'auto' }}>
+      <div className="card-topline"><span>Technical value</span><strong>What it demonstrates</strong></div>
+      <ul style={{ color: '#cbd5e1', lineHeight: 1.6, paddingLeft: 18 }}>
+        {details.map(item => <li key={item}>{item}</li>)}
+      </ul>
+    </div>
+    {showSecurity && <div className="project-card" style={{ minHeight: 'auto' }}>
+      <div className="card-topline"><span>Security focus</span><strong>Blue-team / DevSecOps</strong></div>
+      <ul style={{ color: '#cbd5e1', lineHeight: 1.6, paddingLeft: 18 }}>
+        {securityFocus.map(item => <li key={item}>{item}</li>)}
+      </ul>
+    </div>}
+  </div>
 }
 
 export default function PublicPortfolioV2() {
@@ -122,6 +143,8 @@ export default function PublicPortfolioV2() {
       {active === 'nutrition' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Nutrition Analyzer</h2><p>Available foods: {foods.map(food => food.name).join(', ')}.</p></div><input style={{width:'100%',borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={foodQuery} onChange={e => setFoodQuery(e.target.value)} placeholder="Search food" />{!query && <p style={{color:'#cbd5e1',marginTop:16}}>Type a food name to see the nutrition card.</p>}{query && filteredFoods.length === 0 && <p style={{color:'#cbd5e1',marginTop:16}}>No match in the demo dataset.</p>}<div className="project-grid" style={{marginTop:16}}>{filteredFoods.map(food => <div className="project-card" key={food.name}><h3>{food.name}</h3><p>{food.kcal} kcal · {food.protein}g protein · {food.carbs}g carbs · {food.fat}g fat</p></div>)}</div></div>}
 
       {active === 'estimate' && <div id="estimate-demo"><div className="section-header"><p className="eyebrow">Live demo</p><h2>Service estimate calculator</h2><p>Edit materials and labor, calculate totals and export a PDF.</p></div><div className="table-wrapper"><table className="items-table"><thead><tr><th>Description</th><th>Type</th><th>Qty.</th><th>Unit price</th><th>Subtotal</th></tr></thead><tbody>{items.map((item, index) => { const subtotal = toNumber(item.quantity) * toNumber(item.price); return <tr key={index}><td><input value={item.description} onChange={e => updateItem(index, 'description', e.target.value)} /></td><td><select value={item.type} onChange={e => updateItem(index, 'type', e.target.value)}><option value="material">Material</option><option value="labor">Labor</option></select></td><td><input type="number" value={item.quantity} onChange={e => updateItem(index, 'quantity', e.target.value)} /></td><td><input type="number" value={item.price} onChange={e => updateItem(index, 'price', e.target.value)} /></td><td className="numeric">${subtotal.toFixed(2)}</td></tr> })}</tbody></table><div className="table-actions"><button className="btn secondary" onClick={() => setItems(prev => [...prev, { description: '', type: 'material', quantity: 1, price: 0 }])}>+ Add item</button><button className="btn primary" onClick={exportPdf}>Export PDF</button></div></div><div className="totals"><div className="card"><h3>Materials</h3><p>${totals.materials.toFixed(2)}</p></div><div className="card"><h3>Labor</h3><p>${totals.labor.toFixed(2)}</p></div><div className="card total"><h3>Total</h3><p>${totals.total.toFixed(2)}</p></div></div></div>}
+
+      <DetailPanel active={active} />
     </section>
   </main>
 }
