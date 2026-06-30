@@ -33,19 +33,54 @@ export function EstimatePanel() {
   function updateItem(index, field, value) { setItems(prev => prev.map((item, i) => i === index ? { ...item, [field]: value } : item)) }
   function exportPdf() {
     const doc = new jsPDF()
+    const pageWidth = doc.internal.pageSize.getWidth()
+    doc.setFillColor(2, 6, 23)
+    doc.rect(0, 0, pageWidth, 34, 'F')
+    doc.setTextColor(248, 250, 252)
     doc.setFontSize(18)
-    doc.text('Service Estimate', 14, 18)
+    doc.text('Service Estimate', 14, 17)
     doc.setFontSize(10)
-    doc.text('Generated from Manuel Falcone technical portfolio demo', 14, 27)
-    let y = 42
+    doc.text('Generated from Manuel Falcone technical portfolio demo', 14, 25)
+    doc.setDrawColor(249, 115, 22)
+    doc.setLineWidth(1.1)
+    doc.line(14, 39, pageWidth - 14, 39)
+    let y = 50
+    doc.setTextColor(71, 85, 105)
+    doc.setFontSize(9)
+    doc.text('DESCRIPTION', 14, y)
+    doc.text('TYPE', 88, y)
+    doc.text('QTY', 116, y)
+    doc.text('UNIT', 137, y)
+    doc.text('SUBTOTAL', 166, y)
+    y += 5
+    doc.setDrawColor(226, 232, 240)
+    doc.line(14, y, pageWidth - 14, y)
+    y += 8
     items.forEach(item => {
       const subtotal = toNumber(item.quantity) * toNumber(item.price)
-      doc.text(`${item.description || 'Item'} - ${item.type} - Qty ${item.quantity} - $${subtotal.toFixed(2)}`, 14, y)
+      if (y > 260) { doc.addPage(); y = 22 }
+      doc.setTextColor(15, 23, 42)
+      doc.setFontSize(10)
+      doc.text(String(item.description || 'Item').slice(0, 32), 14, y)
+      doc.text(String(item.type || '-'), 88, y)
+      doc.text(String(item.quantity || 0), 116, y)
+      doc.text(`$${toNumber(item.price).toFixed(2)}`, 137, y)
+      doc.text(`$${subtotal.toFixed(2)}`, 166, y)
       y += 8
     })
-    doc.text(`Materials: $${totals.materials.toFixed(2)}`, 14, y + 8)
-    doc.text(`Labor: $${totals.labor.toFixed(2)}`, 14, y + 16)
-    doc.text(`Total: $${totals.total.toFixed(2)}`, 14, y + 24)
+    y += 6
+    doc.setFillColor(241, 245, 249)
+    doc.roundedRect(116, y, 80, 34, 3, 3, 'F')
+    doc.setTextColor(71, 85, 105)
+    doc.setFontSize(9)
+    doc.text('Materials', 122, y + 9)
+    doc.text(`$${totals.materials.toFixed(2)}`, 166, y + 9)
+    doc.text('Labor', 122, y + 18)
+    doc.text(`$${totals.labor.toFixed(2)}`, 166, y + 18)
+    doc.setTextColor(249, 115, 22)
+    doc.setFontSize(12)
+    doc.text('Total', 122, y + 29)
+    doc.text(`$${totals.total.toFixed(2)}`, 164, y + 29)
     doc.save('service-estimate.pdf')
   }
   return <div className="tool-stack"><div className="tool-heading"><span className="tool-icon orange">▣</span><div><h2>Service Estimate</h2><p>Create service quotes, calculate totals and export PDF.</p></div></div><div className="estimate-table"><table><thead><tr><th>Description</th><th>Type</th><th>Qty.</th><th>Unit price</th><th>Subtotal</th></tr></thead><tbody>{items.map((item, index) => { const subtotal = toNumber(item.quantity) * toNumber(item.price); return <tr key={index}><td><input value={item.description} onChange={event => updateItem(index, 'description', event.target.value)} /></td><td><select value={item.type} onChange={event => updateItem(index, 'type', event.target.value)}><option value="material">Material</option><option value="labor">Labor</option></select></td><td><input type="number" value={item.quantity} onChange={event => updateItem(index, 'quantity', event.target.value)} /></td><td><input type="number" value={item.price} onChange={event => updateItem(index, 'price', event.target.value)} /></td><td>${subtotal.toFixed(2)}</td></tr> })}</tbody></table></div><div className="cta-row"><button className="btn-ghost" onClick={() => setItems(prev => [...prev, { description: '', type: 'material', quantity: 1, price: 0 }])}>+ Add item</button><button className="btn-primary" onClick={exportPdf}>Export PDF</button></div><div className="score-grid"><div className="score-card"><span>Materials</span><strong>${totals.materials.toFixed(2)}</strong></div><div className="score-card"><span>Labor</span><strong>${totals.labor.toFixed(2)}</strong></div><div className="score-card"><span>Total</span><strong>${totals.total.toFixed(2)}</strong></div></div></div>
