@@ -10,24 +10,24 @@ The public landing page is deployed on Vercel under the `portfolio-projects-self
 
 | Project | Area | Access | Summary |
 | --- | --- | --- | --- |
-| TaskPulse | Fullstack / MERN | Live frontend demo | Task management app with authentication flow, API integration and CRUD behavior. |
-| Log Monitor | Infrastructure / DevOps | Source + local dashboard | FastAPI dashboard for logs, CPU, memory and process visibility. |
-| Web Hardening Auditor | Cybersecurity / DevSecOps | CLI + report generator | Passive security hardening audit for headers, HTTPS/TLS signals, cookies and information leakage. |
-| Nutrition Analyzer | Python / API | Source + local API/UI | Small FastAPI application for food lookup and nutritional data. |
-| Service Estimate Calculator | Frontend | Live demo inside portfolio | Editable calculator for materials, labor, subtotals and PDF export. |
+| TaskPulse | Fullstack / MERN | Public browser demo | Task management app with demo auth flow, dashboard and CRUD behavior using browser-local data. |
+| Log Monitor | Infrastructure / Ops | Interactive browser demo | Log parser that summarizes severity counts and recent operational events. |
+| Site Check | DevSecOps | Live API demo | Server-side URL check that returns status, response time and selected response headers. |
+| Nutrition Analyzer | Python / API | Interactive browser demo | Food lookup demo with visible sample dataset and nutrition values. |
+| Service Estimate Calculator | Frontend | Public browser demo | Editable calculator for materials, labor, subtotals and PDF export. |
 
 ## Repository structure
 
-- `presupuesto_electrico/` – public portfolio landing and service estimate demo.
-- `taskpulse_frontend/` – React/Vite frontend for TaskPulse.
-- `taskpulse_backend/` – Node/Express API for TaskPulse.
-- `log_monitor_py/` – Python/FastAPI log and system metrics dashboard.
-- `web_hardening_auditor/` – passive security audit CLI and report generator.
-- `nutrition_analyzer_py/` – Python/FastAPI nutritional lookup app.
+- `presupuesto_electrico/` – public portfolio landing, service estimate demo and site-check API endpoint.
+- `taskpulse_frontend/` – React/Vite frontend for TaskPulse public demo.
+- `taskpulse_backend/` – Node/Express API source for TaskPulse.
+- `log_monitor_py/` – Python/FastAPI log and system metrics dashboard source.
+- `web_hardening_auditor/` – passive site review CLI and report generator source.
+- `nutrition_analyzer_py/` – Python/FastAPI nutritional lookup app source.
 
-## Notes
+## Review notes
 
-Some projects are live demos. Others are code-first projects with local run instructions because they require backend services, database credentials or a controlled runtime.
+The public landing prioritizes projects that can be opened and tested in the browser. Source-only projects remain in the repository as code review material until they have production-quality public demos.
 
 ## Author
 
