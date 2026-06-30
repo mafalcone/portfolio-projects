@@ -40,20 +40,20 @@ function makeDemoApi() {
       return response({ mode: "demo" });
     },
     post: async (path, payload = {}) => {
-      const email = String(payload.email || "").trim().toLowerCase();
-      const value = String(payload.password || "");
+      if (path === "/auth/register" || path === "/auth/login") {
+        const email = String(payload.email || "").trim().toLowerCase();
+        const value = String(payload.password || "");
 
-      if (!isEmail(email)) return reject("Enter a valid email address.");
-      if (value.length < 6) return reject("Password must have at least 6 characters.");
+        if (!isEmail(email)) return reject("Enter a valid email address.");
+        if (value.length < 6) return reject("Password must have at least 6 characters.");
 
-      if (path === "/auth/register") {
-        const users = readUsers();
-        if (users.some((user) => user.email === email)) return reject("User already exists. Login instead.");
-        saveUsers([{ email, proof: makeProof(email, value) }, ...users]);
-        return response({ user: { email }, mode: "demo" });
-      }
+        if (path === "/auth/register") {
+          const users = readUsers();
+          if (users.some((user) => user.email === email)) return reject("User already exists. Login instead.");
+          saveUsers([{ email, proof: makeProof(email, value) }, ...users]);
+          return response({ user: { email }, mode: "demo" });
+        }
 
-      if (path === "/auth/login") {
         const user = readUsers().find((item) => item.email === email);
         if (!user) return reject("User not found. Register first in this demo.");
         if (user.proof !== makeProof(email, value)) return reject("Invalid email or password.");
@@ -64,8 +64,10 @@ function makeDemoApi() {
       }
 
       if (path === "/tasks") {
+        const title = String(payload.title || "").trim();
+        if (!title) return reject("Enter a task title.");
         const tasks = readTasks();
-        const task = { id: String(Date.now()), title: payload.title || "Untitled task", done: false };
+        const task = { id: String(Date.now()), title, done: false };
         const next = [task, ...tasks];
         saveTasks(next);
         return response({ task, tasks: next, mode: "demo" });
