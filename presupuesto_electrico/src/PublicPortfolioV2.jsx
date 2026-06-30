@@ -2,10 +2,11 @@ import React, { useMemo, useState } from 'react'
 import jsPDF from 'jspdf'
 import { projectDetails, securityFocus } from './projectDetails'
 import SiteReport from './SiteReport'
+import IncidentTriage from './IncidentTriage'
 
 const projects = [
   { id: 'taskpulse', name: 'TaskPulse', area: 'Fullstack / MERN', status: 'Live app', desc: 'Task manager with login flow, dashboard and CRUD behavior.', stack: 'React, Vite, Node.js, Express, MongoDB' },
-  { id: 'logs', name: 'Log Monitor', area: 'Infra / Ops', status: 'Interactive demo', desc: 'Log parser that summarizes severity and recent events.', stack: 'Python/FastAPI source + browser demo' },
+  { id: 'logs', name: 'Incident Log Triage', area: 'Infra / Blue Team', status: 'Interactive demo', desc: 'Log parser that classifies events by type, severity and suggested action.', stack: 'Python/FastAPI source + browser demo' },
   { id: 'site', name: 'Web Hardening Review', area: 'DevSecOps', status: 'Live API demo', desc: 'Server-side review of response status, timing and security-related headers.', stack: 'Vercel Function + frontend report' },
   { id: 'nutrition', name: 'Nutrition Analyzer', area: 'Python / API', status: 'Interactive demo', desc: 'Food lookup with visible sample dataset and nutrition values.', stack: 'Python/FastAPI source + browser demo' },
   { id: 'estimate', name: 'Service Estimate', area: 'Frontend', status: 'Live demo', desc: 'Editable estimate calculator with PDF export.', stack: 'React, Vite, jsPDF' }
@@ -15,6 +16,7 @@ const sampleLogs = `[2026-06-29 08:12:03] INFO Backup job started
 [2026-06-29 08:12:41] INFO Database connection restored
 [2026-06-29 08:13:09] WARN Disk usage above 80%
 [2026-06-29 08:13:44] ERROR Failed login attempt blocked
+[2026-06-29 08:14:10] WARN Service restart timeout
 [2026-06-29 08:14:30] INFO Backup job completed`
 
 const foods = [
@@ -178,7 +180,7 @@ export default function PublicPortfolioV2() {
     <section className="section">
       {active === 'taskpulse' && <div><div className="section-header"><p className="eyebrow">Live app</p><h2>TaskPulse</h2><p>Register with a valid email and password, then login to manage browser-local demo tasks.</p></div><a className="btn primary" href="https://portfolio-projects-dfi2.vercel.app" target="_blank" rel="noreferrer">Open TaskPulse demo</a></div>}
 
-      {active === 'logs' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Log Monitor</h2><p>Paste logs and inspect operational severity counts.</p></div><textarea style={{width:'100%',minHeight:160,borderRadius:16,padding:16,background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={logs} onChange={e => setLogs(e.target.value)} /><div className="totals"><div className="card"><h3>Total</h3><p>{stats.total}</p></div><div className="card"><h3>Info</h3><p>{stats.info}</p></div><div className="card"><h3>Warnings</h3><p>{stats.warn}</p></div><div className="card"><h3>Errors</h3><p>{stats.error}</p></div></div><div className="table-wrapper" style={{marginTop:16}}>{stats.rows.slice(-5).map((row, i) => <p key={i} style={{margin:'8px 0',color:'#cbd5e1'}}>{row}</p>)}</div></div>}
+      {active === 'logs' && <div><div className="section-header"><p className="eyebrow">Interactive demo</p><h2>Incident Log Triage</h2><p>Paste logs and inspect severity counts, incident categories and suggested next actions.</p></div><textarea style={{width:'100%',minHeight:160,borderRadius:16,padding:16,background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={logs} onChange={e => setLogs(e.target.value)} /><div className="totals"><div className="card"><h3>Total</h3><p>{stats.total}</p></div><div className="card"><h3>Info</h3><p>{stats.info}</p></div><div className="card"><h3>Warnings</h3><p>{stats.warn}</p></div><div className="card"><h3>Errors</h3><p>{stats.error}</p></div></div><IncidentTriage rows={stats.rows} /></div>}
 
       {active === 'site' && <div><div className="section-header"><p className="eyebrow">Live API demo</p><h2>Web Hardening Review</h2><p>Runs through a Vercel serverless function and builds a passive hardening report from real response data.</p></div><div className="hero-actions"><input style={{flex:1,minWidth:260,borderRadius:999,padding:'12px 16px',background:'#020617',color:'#f8fafc',border:'1px solid rgba(148,163,184,.2)'}} value={target} onChange={e => setTarget(e.target.value)} /><button className="btn primary" onClick={runSiteCheck}>{siteLoading ? 'Checking...' : 'Run check'}</button></div><SiteReport result={siteResult} /></div>}
 
