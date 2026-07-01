@@ -7,7 +7,7 @@ export const strengths = [
 
 export const projects = [
   { id: 'taskpulse', title: 'TaskPulse', desc: 'Task management system with dashboard behavior.', stack: 'React · Vite · LocalStorage', color: 'blue', icon: '☑', tag: 'NEW' },
-  { id: 'logs', title: 'Incident Log Triage', desc: 'Parse logs and classify events by type and severity.', stack: 'Regex · JS · Heuristics', color: 'green', icon: '▦', tag: 'NEW' },
+  { id: 'logs', title: 'Incident Log Triage', desc: 'Parse logs and classify events by type and severity.', stack: 'Log parsing · JS · Rules', color: 'green', icon: '▦', tag: 'NEW' },
   { id: 'site', title: 'Web Hardening Review', desc: 'Review headers and public response signals.', stack: 'Node.js · API · Report', color: 'purple', icon: '◇', tag: 'NEW' },
   { id: 'estimate', title: 'Service Estimate', desc: 'Create service quotes and export PDF.', stack: 'React · jsPDF · LocalStorage', color: 'orange', icon: '▣' },
   { id: 'nutrition', title: 'Nutrition Analyzer', desc: 'Search nutrition facts for foods.', stack: 'Data lookup · React', color: 'blue', icon: '♢' }
