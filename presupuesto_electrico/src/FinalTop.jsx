@@ -50,7 +50,7 @@ export function FinalTop() {
         <p className="hello">Hello, I'm</p>
         <h1>MANUEL FALCONE</h1>
         <h2>IT Infrastructure &amp; Support | Automation Builder | Security | Software</h2>
-        <p className="lead">IT Consultant with experience in N1/N2/N3 technical support, systems administration, infrastructure, networks, IT operations, development and automation. Technical-operational profile with a background combining incident resolution, operational continuity, coordination of technical teams, user/client support, documentation, operational leadership, management, process improvement and implementation of new technologies.</p>
+        <p className="lead">IT Consultant with experience in technical support, systems administration, infrastructure, networks, IT operations, development and automation. Technical-operational profile with a background combining incident resolution, operational continuity, coordination of technical teams, user/client support, documentation, operational leadership, management, process improvement and implementation of new technologies.</p>
         <div className="cta-row"><a className="btn-primary" href="#projects">View Projects <span>→</span></a><a className="btn-ghost" href="https://github.com/mafalcone/portfolio-projects" target="_blank" rel="noreferrer">Repository <span>↧</span></a></div>
       </div>
       <aside className={`strengths-panel flip-panel ${showSkills ? 'show-skills' : ''}`} id="skills">
