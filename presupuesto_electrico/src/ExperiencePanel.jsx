@@ -1,57 +1,57 @@
 const experiences = [
   {
-    role: 'Consultor IT',
-    date: '2022 - Actualidad',
-    area: 'Soporte, infraestructura, desarrollo y automatización',
+    role: 'IT Consultant',
+    date: '2022 - Present',
+    area: 'Support, infrastructure, development and automation',
     bullets: [
-      'Consultoría IT independiente en infraestructura, redes, sistemas, desarrollo de software e IA.',
-      'Diagnóstico y resolución de incidencias en servidores, redes, conectividad, sistemas y herramientas operativas.',
-      'Desarrollo de software, soluciones web y automatizaciones con JavaScript/Node.js, React/MERN, Python, SQL, MongoDB y APIs REST.',
-      'Documentación de procesos técnicos e integración de herramientas IA y flujos asistidos por LLMs para mejorar tareas operativas.'
+      'Independent IT consulting in infrastructure, networks, systems, software development and AI.',
+      'Diagnosis and resolution of incidents in servers, networks, connectivity, systems and operational tools.',
+      'Software development, web solutions and automations with JavaScript/Node.js, React/MERN, Python, SQL, MongoDB and REST APIs.',
+      'Technical process documentation and integration of AI tools and LLM-assisted workflows to improve operational tasks.'
     ]
   },
   {
-    role: 'Supervisor de producción / CRE-FAL',
+    role: 'Production Supervisor / CRE-FAL',
     date: '2024 - 2025',
-    area: 'Supervisión operativa, coordinación',
+    area: 'Operational supervision and coordination',
     bullets: [
-      'Gestión y coordinación de tareas de producción en fábrica.',
-      'Organización de prioridades.',
-      'Supervisión de producción de máquinas.',
-      'Coordinación de personas, tareas técnicas y resolución de problemas.'
+      'Management and coordination of production tasks in a factory environment.',
+      'Organization of priorities.',
+      'Supervision of machine production.',
+      'Coordination of people, technical tasks and problem resolution.'
     ]
   },
   {
-    role: 'Jefe de Operaciones / Net2One',
+    role: 'Head of Operations / Net2One',
     date: '2021 - 2022',
-    area: 'Operaciones IT, coordinación técnica, proveedores y continuidad',
+    area: 'IT operations, technical coordination, vendors and continuity',
     bullets: [
-      'Gestión y liderazgo de equipos técnicos en sitio y remotos; coordinación de prioridades, incidencias y tareas operativas.',
-      'Soporte técnico nivel 2, administración de Windows Server, red y sistemas virtualizados con Hyper-V.',
-      'Diseño e implementación de soluciones de backup, seguimiento de KPIs, capacitación de técnicos y continuidad del servicio.',
-      'Implementación de seguridad en redes y sistemas.'
+      'Management and leadership of on-site and remote technical teams; coordination of priorities, incidents and operational tasks.',
+      'Level 2 technical support, Windows Server administration, networking and virtualized systems with Hyper-V.',
+      'Design and implementation of backup solutions, KPI tracking, technician training and service continuity.',
+      'Implementation of network and systems security.'
     ]
   },
   {
-    role: 'Implantador HW & SW / TECSIDEL',
+    role: 'HW & SW Implementer / TECSIDEL',
     date: '2019 - 2020',
-    area: 'Implementación técnica, soporte en campo y operación',
+    area: 'Technical implementation, field support and operation',
     bullets: [
-      'Configuración y monitoreo de sistemas de peaje automatizados y peajes convencionales.',
-      'Administración de Windows Server, Linux y sistemas virtualizados en VMware.',
-      'Implementación de servicios automatizados y web services; testeo de soluciones de software y hardware.',
-      'Desarrollo conjunto con equipos remotos de distintas áreas para integración de proyectos.'
+      'Configuration and monitoring of automated toll systems and conventional toll systems.',
+      'Administration of Windows Server, Linux and virtualized systems in VMware.',
+      'Implementation of automated services and web services; testing of software and hardware solutions.',
+      'Joint development with remote teams from different areas for project integration.'
     ]
   },
   {
-    role: 'Administrador de Sistemas / Net2One',
+    role: 'Systems Administrator / Net2One',
     date: '2017 - 2019',
-    area: 'Sistemas, infraestructura, soporte N1/N2/N3 y aplicaciones críticas',
+    area: 'Systems, infrastructure, N1/N2/N3 support and critical applications',
     bullets: [
-      'Soporte técnico N1/N2/N3 y administración/configuración de sistemas, red y Windows Server.',
-      'Administración de sistemas virtualizados con Hyper-V, soluciones de backup y diagnóstico/resolución de problemas.',
-      'Implementación de nuevas tecnologías y sistemas; coordinación de tareas con equipos internos, proveedores y distintas áreas.',
-      'Implementación y soporte de switches, routers y firewalls; soporte a aplicaciones médicas, PACS y portal de estudios; implementación de seguridad en redes.'
+      'N1/N2/N3 technical support and administration/configuration of systems, network and Windows Server.',
+      'Administration of virtualized systems with Hyper-V, backup solutions and troubleshooting/problem resolution.',
+      'Implementation of new technologies and systems; coordination of tasks with internal teams, vendors and different areas.',
+      'Implementation and support of switches, routers and firewalls; support for medical applications, PACS and study portal; implementation of network security.'
     ]
   }
 ]
