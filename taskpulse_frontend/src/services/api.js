@@ -22,9 +22,10 @@ function makeDemoApi() {
     const saved = localStorage.getItem(taskKey());
     if (saved) return JSON.parse(saved);
     const tasks = [
-      { id: "demo-1", title: "Review production alerts", done: true },
-      { id: "demo-2", title: "Check backup status", done: false },
-      { id: "demo-3", title: "Document troubleshooting steps", done: false },
+      { id: "demo-1", title: "Review production alerts", done: true, priority: "high", area: "Operations", dueDate: "Today", owner: "Manuel", notes: "Check active warnings and assign follow-up." },
+      { id: "demo-2", title: "Check backup status", done: false, priority: "high", area: "Infrastructure", dueDate: "Today", owner: "Manuel", notes: "Validate last job result and restore point." },
+      { id: "demo-3", title: "Document troubleshooting steps", done: false, priority: "medium", area: "Support", dueDate: "Tomorrow", owner: "Team", notes: "Turn repeated incidents into a reusable runbook." },
+      { id: "demo-4", title: "Review API error logs", done: false, priority: "medium", area: "Automation", dueDate: "This week", owner: "Manuel", notes: "Group errors by endpoint and frequency." },
     ];
     localStorage.setItem(taskKey(), JSON.stringify(tasks));
     return tasks;
@@ -67,7 +68,16 @@ function makeDemoApi() {
         const title = String(payload.title || "").trim();
         if (!title) return reject("Enter a task title.");
         const tasks = readTasks();
-        const task = { id: String(Date.now()), title, done: false };
+        const task = {
+          id: String(Date.now()),
+          title,
+          done: false,
+          priority: payload.priority || "medium",
+          area: payload.area || "Operations",
+          dueDate: payload.dueDate || "This week",
+          owner: payload.owner || "Manuel",
+          notes: payload.notes || "Added from the public demo dashboard.",
+        };
         const next = [task, ...tasks];
         saveTasks(next);
         return response({ task, tasks: next, mode: "demo" });
@@ -77,7 +87,7 @@ function makeDemoApi() {
     put: async (path, payload = {}) => {
       const id = path.split("/").pop();
       const tasks = readTasks().map((task) =>
-        String(task.id || task._id) === String(id) ? { ...task, done: Boolean(payload.done ?? payload.completed) } : task
+        String(task.id || task._id) === String(id) ? { ...task, ...payload, done: Boolean(payload.done ?? payload.completed ?? task.done) } : task
       );
       saveTasks(tasks);
       return response({ tasks, mode: "demo" });
