@@ -1,8 +1,8 @@
 import { projects } from './finalCards'
 
 export function FinalProjectGrid({ active, setActive }) {
-  return <section className="featured" id="projects">
-    <div className="section-title"><span>&lt;/&gt;</span><h2>Featured Projects</h2></div>
+  return <section className="featured view-block" id="projects">
+    <div className="section-title"><span>&lt;/&gt;</span><h2>Demo Projects</h2></div>
     <div className="feature-grid">
       {projects.map(project => <button className={`feature-card ${project.color} ${active === project.id ? 'active' : ''}`} key={project.id} onClick={() => setActive(project.id)}>
         <span className="feature-icon">{project.icon}</span>
