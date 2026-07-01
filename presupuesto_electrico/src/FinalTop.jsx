@@ -5,7 +5,7 @@ export function FinalTop() {
     <header className="topbar">
       <div className="brand">
         <div className="logo-mark"><span>M</span><i>F</i></div>
-        <div><strong>Manuel Falcone</strong><p>IT Professional | Infrastructure | Support | Automation | Security</p></div>
+        <div><strong>Manuel Falcone</strong><p>IT Professional | Infrastructure | Support | Automation | Security | Software</p></div>
       </div>
       <nav className="nav-links">
         <a className="active" href="#projects">Projects</a>
@@ -22,7 +22,7 @@ export function FinalTop() {
       <div className="hero-copy">
         <p className="hello">Hello, I'm</p>
         <h1>MANUEL FALCONE</h1>
-        <h2>IT Infrastructure &amp; Support Specialist | Automation Builder | Security Enthusiast</h2>
+        <h2>IT Infrastructure &amp; Support | Automation Builder | Security | Software</h2>
         <p className="lead">I design, build and maintain reliable systems and tools that solve real problems. Focused on infrastructure, automation and security with a strong support background (N1 / N2 / N3).</p>
         <div className="cta-row"><a className="btn-primary" href="#projects">View Projects <span>→</span></a><a className="btn-ghost" href="https://github.com/mafalcone/portfolio-projects" target="_blank" rel="noreferrer">Repository <span>↧</span></a></div>
       </div>
