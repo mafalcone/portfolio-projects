@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Analyzer</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Nutrition Analyzer</h1>
+        <h2>Proyecto de portfolio - Python + FastAPI</h2>
+
+        <form action="/" method="get" class="search-form">
+            <label for="query">Buscar alimento (ej: banana, arroz, huevo):</label>
+            <input
+                type="text"
+                id="query"
+                name="q"
+                placeholder="Escribí un alimento..."
+                value="{{ query | default('') }}"
+            >
+            <button type="submit">Buscar</button>
+        </form>
+
+        {% if results %}
+            <div class="results">
+                <h3>Resultados:</h3>
+                <ul>
+                    {% for item in results %}
+                        <li>
+                            <strong>{{ item.name }}</strong><br>
+                            Calorías: {{ item.calories }} kcal<br>
+                            Proteínas: {{ item.protein }} g<br>
+                            Carbohidratos: {{ item.carbs }} g<br>
+                            Grasas: {{ item.fat }} g
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% elif query %}
+            <p>No se encontraron resultados para "{{ query }}".</p>
+        {% endif %}
+
+        <hr>
+
+        <div class="examples">
+            <h3>Alimentos de ejemplo:</h3>
+            <ul>
+                <li>Banana</li>
+                <li>Arroz</li>
+                <li>Huevo</li>
+                <li>Manzana</li>
+                <li>Carne</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>Proyecto de portfolio · Demo técnica Python + FastAPI.</p>
+        </footer>
+    </div>
+</body>
+</html>

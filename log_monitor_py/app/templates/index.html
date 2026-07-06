@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Log Monitor</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+<header>
+    <h1>Log Monitor</h1>
+    <p>Proyecto de portfolio &mdash; Python + FastAPI</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Seleccionar log</h2>
+        <form method="get" action="/">
+            <label for="log">Nombre del archivo (en carpeta <code>logs/</code>):</label>
+            <input
+                type="text"
+                id="log"
+                name="log"
+                placeholder="example.log"
+                value="{{ log_name or '' }}"
+                autocomplete="off"
+            />
+            <button type="submit">Analizar</button>
+        </form>
+
+        <p class="hint">
+            Ejemplo incluido: <code>example.log</code> en <code>app/logs/</code>.
+        </p>
+    </section>
+
+    {% if error_message %}
+    <section class="card error">
+        <h2>Error</h2>
+        <p>{{ error_message }}</p>
+    </section>
+    {% endif %}
+
+    {% if stats %}
+    <section class="metrics">
+        <div class="card metric">
+            <h3>Total de líneas</h3>
+            <p class="metric-value">{{ stats.total_lines }}</p>
+        </div>
+
+        <div class="card metric">
+            <h3>Eventos por nivel</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for level, count in stats.level_counts.items() %}
+                    <tr>
+                        <td>{{ level }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card logs">
+        <h2>Últimas líneas</h2>
+        {% if recent_lines %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Nivel</th>
+                    <th>Mensaje</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for line in recent_lines %}
+                <tr>
+                    <td>{{ line.ts }}</td>
+                    <td>{{ line.level }}</td>
+                    <td>{{ line.msg }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No se encontraron líneas parseadas.</p>
+        {% endif %}
+    </section>
+    {% endif %}
+</main>
+</body>
+</html>
