@@ -1,0 +1,119 @@
+/* Conservative visual refinement: preserve the published layout and behavior. */
+
+.brand p {
+  letter-spacing: 0.035em;
+}
+
+.hero-copy h1 {
+  font-weight: 650;
+  letter-spacing: -0.045em;
+}
+
+.hero-copy h2 {
+  color: #fb923c;
+  font-weight: 800;
+  line-height: 1.34;
+}
+
+.lead {
+  color: #cbd5e1;
+  max-width: 760px;
+}
+
+.portrait-card {
+  background-color: #0f172a !important;
+  background-image: url('/profile-photo.jpg') !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  border-color: rgba(148, 163, 184, 0.24) !important;
+  border-radius: 11px !important;
+  cursor: default;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+.strengths-panel,
+.active-project-panel,
+.about-card,
+.skills-card,
+.experience-card {
+  border-color: rgba(148, 163, 184, 0.2);
+  background: rgba(3, 8, 18, 0.72);
+  border-radius: 12px;
+}
+
+.strength-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(13, 23, 40, 0.9);
+}
+
+.strength-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 3px;
+}
+
+.strength-card.blue::before,
+.feature-card.blue::before {
+  background: #0ea5e9;
+}
+
+.strength-card.green::before,
+.feature-card.green::before {
+  background: #63e635;
+}
+
+.strength-card.purple::before,
+.feature-card.purple::before {
+  background: #a855f7;
+}
+
+.strength-card.orange::before,
+.feature-card.orange::before {
+  background: #ff7a00;
+}
+
+.feature-card {
+  position: relative;
+  overflow: visible;
+  border-radius: 9px;
+  background: rgba(7, 16, 31, 0.9);
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  left: -1px;
+  height: 3px;
+  border-radius: 9px 9px 0 0;
+}
+
+.feature-card.active {
+  border-color: rgba(255, 106, 0, 0.72);
+}
+
+.btn-primary,
+.btn-ghost,
+.btn-analyze,
+.report-actions button,
+.report-actions a {
+  border-radius: 7px;
+}
+
+@media (max-width: 760px) {
+  .hero-copy h1 {
+    font-size: clamp(2.2rem, 12vw, 3.15rem);
+  }
+
+  .hero-copy h2 {
+    font-size: 0.96rem;
+  }
+}

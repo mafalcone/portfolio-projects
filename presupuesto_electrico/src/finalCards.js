@@ -2,7 +2,7 @@ export const strengths = [
   { title: 'Infrastructure', text: 'Servers, networks, virtualization and backups', color: 'blue', icon: '▤' },
   { title: 'Support N2 / N3', text: 'Troubleshooting, incidents and escalations', color: 'green', icon: '◖' },
   { title: 'Software / Automation', text: 'Scripts, APIs, workflows and tools', color: 'purple', icon: '⚙' },
-  { title: 'DevSecOps', text: 'Monitoring, logs, reviews and best practices', color: 'orange', icon: '▣' }
+  { title: 'DevOps', text: 'Monitoring, logs, reviews and best practices', color: 'orange', icon: '▣' }
 ]
 
 export const projects = [
