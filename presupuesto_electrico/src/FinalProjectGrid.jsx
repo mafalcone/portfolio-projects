@@ -16,9 +16,9 @@ export function FinalProjectGrid({ active, setActive }) {
   }
 
   return <section className="featured view-block" id="projects">
-    <div className="section-title"><span>&lt;/&gt;</span><h2>Demo Projects</h2></div>
+    <div className="section-title"><span>&lt;/&gt;</span><h2>Selected Case Studies</h2></div>
     <div className="feature-grid">
-      {projects.map(project => <button className={`feature-card ${project.color} ${active === project.id ? 'active' : ''}`} key={project.id} onClick={() => openProject(project.id)} data-tooltip={project.interviewNote} aria-label={`${project.title}. ${project.interviewNote}`}>
+      {projects.map(project => <button className={`feature-card ${project.color} ${project.primary ? 'featured-primary' : ''} ${active === project.id ? 'active' : ''}`} key={project.id} onClick={() => openProject(project.id)} data-tooltip={project.interviewNote} aria-label={`${project.title}. ${project.interviewNote}`}>
         <span className="feature-icon">{project.icon}</span>
         <div>
           <div className="feature-title-row"><h3>{project.title}</h3>{project.tag && <b className={`badge ${project.color}`}>{project.tag}</b>}</div>
