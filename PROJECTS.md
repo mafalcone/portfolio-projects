@@ -1,5 +1,21 @@
 # Project Details
 
+## AI News Intelligence Pipeline
+
+**Area:** Applied AI / Automation / API Integration
+
+**Stack:** Python, REST APIs, Pydantic, SQLite/SQL, JSON Schema, RSS/JSON, webhooks, structured logging
+
+**Public source:** `case-studies/ai-news-intelligence.md`
+
+AI News Intelligence Pipeline is a private automation workflow for controlled source ingestion, idempotent storage, schema-validated analysis, retry/fallback behavior, signed delivery and measurable AI usage.
+
+The public portfolio exposes a sanitized case study and validated demo metrics without publishing the full implementation. The provider adapter is implemented; the checked cloud run used deterministic fallback because no paid API credential was available.
+
+**Current access:** private implementation — technical demo available on request.
+
+---
+
 ## TaskPulse
 
 **Area:** Fullstack / MERN  
