@@ -10,6 +10,7 @@ The public landing page is deployed on Vercel under the `portfolio-projects-self
 
 | Project | Area | Access | Summary |
 | --- | --- | --- | --- |
+| AI News Intelligence Pipeline | Applied AI / Automation | Private implementation; portfolio case study | API/RSS/webhook ingestion, strict structured analysis, SQL persistence, retries/fallbacks, observability and AI usage/cost accounting. |
 | TaskPulse | Fullstack / MERN | Public browser demo | Task management app with demo auth flow, dashboard and CRUD behavior using browser-local data. |
 | Incident Log Triage | Infrastructure / Blue Team | Interactive browser demo | Log parser that classifies events by type, severity and suggested next action. |
 | Web Hardening Review | DevSecOps / Security | Live API demo | Passive server-side review of response status, timing and security-related headers with copyable JSON report. |
@@ -20,6 +21,7 @@ The public landing page is deployed on Vercel under the `portfolio-projects-self
 ## Repository structure
 
 - `presupuesto_electrico/` - public portfolio landing, service estimate demo and site-check API endpoint.
+- `case-studies/` - sanitized public documentation for private implementations.
 - `taskpulse_frontend/` - React/Vite frontend for TaskPulse public demo.
 - `taskpulse_backend/` - Node/Express API source for TaskPulse.
 - `log_monitor_py/` - Python/FastAPI log and system metrics dashboard source behind the Incident Log Triage demo.
