@@ -6,6 +6,7 @@ import { ExperiencePanel } from './ExperiencePanel'
 import { FinalWebPanel } from './FinalWebPanel'
 import { FinalLogsPanel } from './FinalLogsPanel'
 import { TaskPulsePanel, NutritionPanel, EstimatePanel, PythonPanel } from './FinalOtherPanels'
+import { NewsIntelligenceCaseStudy } from './NewsIntelligenceCaseStudy'
 
 function scrollToSectionContent(viewName) {
   const target = viewName === 'experience'
@@ -17,7 +18,7 @@ function scrollToSectionContent(viewName) {
 }
 
 export default function NewApp() {
-  const [active, setActive] = useState('site')
+  const [active, setActive] = useState('news-intelligence')
   const [view, setView] = useState('projects')
 
   function navigateTo(nextView) {
@@ -35,6 +36,7 @@ export default function NewApp() {
     {view === 'projects' && <>
       <FinalProjectGrid active={active} setActive={setActive} />
       <section className={`active-project-panel ${active}`} id="active-project">
+        {active === 'news-intelligence' && <NewsIntelligenceCaseStudy />}
         {active === 'site' && <FinalWebPanel />}
         {active === 'logs' && <FinalLogsPanel />}
         {active === 'taskpulse' && <TaskPulsePanel />}
