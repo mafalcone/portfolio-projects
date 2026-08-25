@@ -7,6 +7,17 @@ export const strengths = [
 
 export const projects = [
   {
+    id: 'news-intelligence',
+    title: 'AI News Intelligence Pipeline',
+    desc: 'API/RSS ingestion, structured analysis, storage and monitored automation.',
+    stack: 'Python · REST API · Pydantic · SQLite · Webhooks',
+    color: 'orange',
+    icon: '◈',
+    tag: 'FEATURED',
+    primary: true,
+    interviewNote: 'Private case study showing source integration, strict structured outputs, SQL persistence, idempotency, retry/fallback behavior, signed webhooks, observability and AI usage/cost accounting.'
+  },
+  {
     id: 'taskpulse',
     title: 'TaskPulse',
     desc: 'Task management system with dashboard behavior.',
